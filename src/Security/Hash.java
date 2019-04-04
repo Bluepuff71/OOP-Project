@@ -9,15 +9,15 @@ import java.security.spec.KeySpec;
 
 public class Hash {
 
-    public static byte[] CreateHash(String plainText, String salt){
+    public static byte[] CreateHash(String plainText, String salt) {
         byte[] byteSalt = salt.getBytes(StandardCharsets.UTF_8);
         KeySpec spec = new PBEKeySpec(plainText.toCharArray(), byteSalt, 65536, 128);
-        try{
+        try {
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
             return factory.generateSecret(spec).getEncoded();
-        } catch (NoSuchAlgorithmException e){
+        } catch (NoSuchAlgorithmException e) {
             System.out.println("The encryption algorithm specified doesn't exist.");
-        } catch (InvalidKeySpecException e){
+        } catch (InvalidKeySpecException e) {
             System.out.println("The keyspec is invalid.");
         }
         System.out.println("There was an error hashing the text.");

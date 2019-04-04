@@ -1,5 +1,7 @@
 package Testing;
 
+//THIS CLASS IS FOR TESTING ONLY, I CANNOT VERIFY THAT THE PRACTICES OR DESIGN PRINCIPLES ARE VALID.
+
 public class Item implements java.io.Serializable {
 
     private String name;

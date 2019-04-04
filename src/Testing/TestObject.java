@@ -5,6 +5,8 @@ import Security.Hash;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+//THIS CLASS IS FOR TESTING ONLY, I CANNOT VERIFY THAT THE PRACTICES OR DESIGN PRINCIPLES ARE VALID.
+
 public class TestObject implements java.io.Serializable {
 
     private String name;
