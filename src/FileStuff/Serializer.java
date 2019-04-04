@@ -10,11 +10,13 @@ public class Serializer {
      * @param fileName the file to serialize into
      */
     public static void writeObject(Object obj, String fileName) {
-        try{
+        try {
             FileOutputStream fileOut = new FileOutputStream(fileName);
             ObjectOutputStream outputStream = new ObjectOutputStream(fileOut);
             outputStream.writeObject(obj);
             outputStream.close();
+        }catch (NotSerializableException e){
+                System.out.println("The class you specified (or a class associated with it) does not implement java.io.Serializable, thus cannot be serialized.");
         } catch (IOException ioException){
             System.out.println("An error occured while writing the object.");
         }
