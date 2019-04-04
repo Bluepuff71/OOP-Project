@@ -53,7 +53,7 @@ public class Testing {
             Serializer.writeObject(testObject, "TestObject.dat");
             //Close the program so the object must be deserialized
             System.out.println("The program will now close.\nPress enter to continue.");
-            //catch the \n left over from line 45
+            //catch the \n left over from line 47
             scanner.nextLine();
             scanner.nextLine();
             scanner.close();
