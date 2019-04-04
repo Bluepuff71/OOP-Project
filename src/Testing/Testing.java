@@ -68,7 +68,7 @@ public class Testing {
         boolean hasTriedPassword = false; //this is here to confirm that the password has been attempted before saying incorrect password
         do {
             if (hasTriedPassword) {
-                System.out.println("That password is incorrect please try again.");
+                System.out.println("That name and/or password combination is incorrect please try again.");
             }
             System.out.println("Verify Password.");
             //get the user to type the credentials
