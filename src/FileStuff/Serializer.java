@@ -19,7 +19,7 @@ public class Serializer {
         } catch (NotSerializableException e) {
             System.out.println("The class you specified (or a class associated with it) does not implement java.io.Serializable, thus cannot be serialized.");
         } catch (IOException ioException) {
-            System.out.println("An error occured while writing the object.");
+            System.out.println("An error occurred while writing the object.");
         }
     }
 
@@ -34,7 +34,7 @@ public class Serializer {
         try {
             obj = readObject(fileName);
         } catch (IOException ioException) {
-            System.out.println("An error occured while reading the object.");
+            System.out.println("An error occurred while reading the object.");
         } catch (ClassNotFoundException cnf) {
             System.out.println("Class not found.");
         } catch (Exception e) {
