@@ -29,15 +29,10 @@ public class Serializer {
      * @param fileName the file to read from
      * @return the deserialized object or null if an error occurred
      */
-    @SuppressWarnings("unchecked")
     public static <T> T q_ReadObject(String fileName) {
         T obj = null;
         try {
-            FileInputStream fileIn = new FileInputStream(fileName);
-            ObjectInputStream in = new ObjectInputStream(fileIn);
-            obj = (T) in.readObject();
-            in.close();
-            fileIn.close();
+            obj = readObject(fileName);
         } catch (IOException ioException) {
             System.out.println("An error occured while reading the object.");
         } catch (ClassNotFoundException cnf) {
@@ -59,6 +54,7 @@ public class Serializer {
      * @throws IOException            if there is a problem opening the file
      * @throws ClassNotFoundException if the data type specified doesn't exist
      */
+    @SuppressWarnings("unchecked")
     public static <T> T readObject(String fileName) throws IOException, ClassNotFoundException {
         T obj;
         FileInputStream fileIn = new FileInputStream(fileName);
