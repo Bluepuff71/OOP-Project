@@ -61,7 +61,7 @@ public abstract class Account {
     /**
      * Used to verify user credentials
      *
-     * @param username the username of the user
+     * @param username  the username of the user
      * @param plainText the plaintext password of the user
      * @return true if the username/password combination is valid, false otherwise
      */
