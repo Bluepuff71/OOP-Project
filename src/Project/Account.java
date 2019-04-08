@@ -6,8 +6,6 @@ import java.util.Arrays;
 
 public abstract class Account {
 
-    //TODO Some kind of token that verifies that the user is signed in before changing stuff like passwords
-
     /**
      * The username of the account holder.
      */
@@ -18,9 +16,6 @@ public abstract class Account {
      */
     private byte[] password;
 
-    private boolean isLoggedIn;
-
-
     public Account(String username, String plainText) {
         this.username = username;
         this.password = Hash.CreateHash(plainText, username);
@@ -30,17 +25,34 @@ public abstract class Account {
         return username;
     }
 
-    public void setUsername(String username) throws UnauthorizedException {
-        if (isLoggedIn) {
-            this.username = username;
+    /**
+     * Changes the username of this user. (Validation Required)
+     *
+     * @param newUsername     the username to change to
+     * @param currentUsername the current username
+     * @param plainText       the plaintext password
+     * @throws UnauthorizedException if the username or password is incorrect
+     */
+    public void setUsername(String newUsername, String currentUsername, String plainText) throws UnauthorizedException {
+        if (verifyCredentials(currentUsername, plainText)) {
+            this.password = Hash.CreateHash(plainText, newUsername);
+            this.username = newUsername;
         } else {
             throw new UnauthorizedException();
         }
     }
 
-    public void setPassword(String plainText) throws UnauthorizedException {
-        if (isLoggedIn) {
-            this.password = Hash.CreateHash(plainText, this.username);
+    /**
+     * Changes the password of the user. (Validation Required)
+     *
+     * @param newPlainText     the plaintext of the new password
+     * @param username         the username of the user
+     * @param currentPlaintext the current plaintext password of the user
+     * @throws UnauthorizedException if the username or password is incorrect
+     */
+    public void setPassword(String newPlainText, String username, String currentPlaintext) throws UnauthorizedException {
+        if (verifyCredentials(username, currentPlaintext)) {
+            this.password = Hash.CreateHash(newPlainText, username);
         } else {
             throw new UnauthorizedException();
         }
@@ -50,11 +62,10 @@ public abstract class Account {
      * Used to verify user credentials
      *
      * @param username the username of the user
-     * @param password the password of the user
-     * @return
+     * @param plainText the plaintext password of the user
+     * @return true if the username/password combination is valid, false otherwise
      */
-    public boolean verifyCredentials(String username, String password) {
-        return Arrays.equals(this.password, Hash.CreateHash(password, username));
+    public boolean verifyCredentials(String username, String plainText) {
+        return Arrays.equals(this.password, Hash.CreateHash(plainText, username));
     }
-
 }
