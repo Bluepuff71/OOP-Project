@@ -9,6 +9,13 @@ import java.security.spec.KeySpec;
 
 public class Hash {
 
+    /**
+     * Creates a salted hash from the given string and salt
+     *
+     * @param plainText the plaintext to hash
+     * @param salt      the salt to add to the hash
+     * @return the salted hash
+     */
     public static byte[] CreateHash(String plainText, String salt) {
         byte[] byteSalt = salt.getBytes(StandardCharsets.UTF_8);
         KeySpec spec = new PBEKeySpec(plainText.toCharArray(), byteSalt, 65536, 128);
@@ -20,7 +27,7 @@ public class Hash {
         } catch (InvalidKeySpecException e) {
             System.out.println("The keyspec is invalid.");
         }
-        System.out.println("There was an error hashing the text.");
+        System.out.println("There was an error hashing the text. Emery did something wrong...");
         return null;
     }
 
