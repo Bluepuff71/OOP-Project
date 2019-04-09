@@ -28,5 +28,16 @@ public class Supplier extends Account implements java.io.Serializable {
         return deliveryOrderList;
     }
 
-    public
+    /*public void processDeliveryOrder(Order order, Storefront storefront){
+
+        for(Shipment shipment : order.getOrderedItems()){
+            if(storefront.inventoryCheck(shipment.getItem(), shipment.getAmount())){
+
+            } else{
+                throw new OutOfStockException();
+            }
+
+
+        }
+    }*/
 }

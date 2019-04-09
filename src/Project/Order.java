@@ -6,7 +6,7 @@ public class Order implements java.io.Serializable {
 
     private String customerUsername;
 
-    private ArrayList<Shipment> orderItems;
+    private ArrayList<Shipment> orderedItems;
 
     private int authorizationNumber;
 
@@ -17,19 +17,19 @@ public class Order implements java.io.Serializable {
 
     private OrderStatus orderStatus;
 
-    public Order(String customerUsername, ArrayList<Shipment> orderItems, int authorizationNumber) {
+    public Order(String customerUsername, ArrayList<Shipment> orderedItems, int authorizationNumber) {
         this.customerUsername = customerUsername;
-        this.orderItems = orderItems;
+        this.orderedItems = orderedItems;
         this.authorizationNumber = authorizationNumber;
         this.orderStatus = OrderStatus.Ordered;
     }
 
-    public ArrayList<Shipment> getOrderItems() {
-        return orderItems;
+    public ArrayList<Shipment> getOrderedItems() {
+        return orderedItems;
     }
 
-    public void setOrderItems(ArrayList<Shipment> orderItems) {
-        this.orderItems = orderItems;
+    public void setOrderedItems(ArrayList<Shipment> orderedItems) {
+        this.orderedItems = orderedItems;
     }
 
     public String getCustomerUsername() {

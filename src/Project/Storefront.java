@@ -41,7 +41,26 @@ public class Storefront implements java.io.Serializable {
         } else {
             inventory.put(item.getName().toLowerCase(), new Shipment(item, orderAmount));
         }
+    }
 
+    /**
+     * Checks the inventory for a specified amount of an item
+     *
+     * @param item   the item to check
+     * @param amount the amount to check
+     * @return true if there is enough supply in the inventory
+     */
+    public boolean inventoryCheck(Item item, int amount) {
+        return inventory.get(item.getName().toLowerCase()).getAmount() >= amount;
+    }
+
+    public void removeFromInventory(Item item, int amount) throws OutOfStockException {
+        Shipment selectedItem = inventory.get(item.getName().toLowerCase());
+        if (selectedItem.getAmount() >= amount) {
+            selectedItem.setAmount(selectedItem.getAmount() - amount);
+        } else {
+            throw new OutOfStockException(item);
+        }
     }
 
     @Override
