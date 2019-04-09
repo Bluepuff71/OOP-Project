@@ -54,6 +54,13 @@ public class Storefront implements java.io.Serializable {
         return inventory.get(item.getName().toLowerCase()).getAmount() >= amount;
     }
 
+    /**
+     * Removes the specified amount of an item from the inventory
+     *
+     * @param item   the item to remove
+     * @param amount the amount to remove
+     * @throws OutOfStockException if there are not enough items to remove
+     */
     public void removeFromInventory(Item item, int amount) throws OutOfStockException {
         Shipment selectedItem = inventory.get(item.getName().toLowerCase());
         if (selectedItem.getAmount() >= amount) {

@@ -21,7 +21,6 @@ public class Item implements java.io.Serializable {
      *
      * @param name        the name of the item
      * @param price       the price of the item
-     * @param description the description of the item
      */
     public Item(String name, double price) {
         this.name = name;

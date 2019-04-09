@@ -66,10 +66,53 @@ public class Customer extends Account implements java.io.Serializable {
         return cart;
     }
 
+    /**
+     * Adds an item to the cart
+     *
+     * @param item   the item to add
+     * @param amount the amount to add
+     */
     public void addToCart(Item item, int amount) {
         cart.add(new Shipment(item, amount));
     }
 
+    /**
+     * Fully removes an item from the cart
+     *
+     * @param item the item to remove
+     */
+    public void removeFromCart(Item item) {
+        for (Shipment shipment : cart) {
+            if (shipment.getItem().equals(item)) {
+                cart.remove(shipment);
+                break;
+            }
+        }
+    }
+
+    /**
+     * Removes a specified number of an item from the cart
+     *
+     * @param item   the item to remove
+     * @param amount the amount to remove
+     */
+    public void removeFromCart(Item item, int amount) {
+        for (Shipment shipment : cart) {
+            if (shipment.getItem().equals(item)) {
+                if (shipment.getAmount() <= amount) {
+                    cart.remove(shipment);
+                } else {
+                    shipment.setAmount(shipment.getAmount() - amount);
+                }
+                break;
+            }
+        }
+    }
+
+    /**
+     * Gets the total cost of the cart
+     * @return the total cart
+     */
     public double getCartTotalCost() {
         double totalCost = 0;
         for (Shipment shipment : cart) {
