@@ -1,0 +1,106 @@
+<diagram program="umletino" version="14.3.0"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>70</x><y>7</y><w>470</w><h>200</h></coordinates><panel_attributes>&lt;&lt;Interface&gt;&gt;
+Supplier
+--
+private ArrayList&lt;Order&gt; deliveryOrderList
+--
+public Supplier(String username, String plainText)
+
+public Supplier(String username, String plainText, ArrayList&lt;Order&gt; deliveryOrderList)
+
+public void addToDeliveryOrderList(Order order)
+
+public void removeFromDeliveryOrderList(Order order)
+
+public ArrayList&lt;Order&gt; getDeliveryOrderList()
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>70</x><y>227</y><w>350</w><h>120</h></coordinates><panel_attributes>&lt;&lt;Interface&gt;&gt;
+Storefront
+--
+private HashMap&lt;String, Shipment&gt; inventory
+--
+public Order createOrderRequest(Customer customer)
+
+public void createInventoryOrder(Item item, int orderAmount)
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>30</x><y>367</y><w>290</w><h>170</h></coordinates><panel_attributes>&lt;&lt;Entity&gt;&gt;
+Shipment
+--
+private Item item
+private int amount
+--
+public Shipment(Item item, int amount)
+
+public Item getItem()
+public void setItem(Item item)
+public int getAmount()
+public void setAmount(int amount)
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>40</x><y>587</y><w>290</w><h>140</h></coordinates><panel_attributes>&lt;&lt;Entity&gt;&gt;
+Order
+--
+private String customerUsername
+private ArrayList&lt;Shipment&gt; orderItems
+pricate int authorizationNumber
+public enum OrderStatus
+private OrderStatus orderStatus
+--
+publicOrder(String customerUsername, ArrayList&lt;Shipment&gt; orderItems, int authorizationNumber)
+
+public ArrayList&lt;Shipment&gt; getOrderItems()
+
+public void setOrderItems(ArrayList&lt;Shipment&gt; orderItems)
+
+public String getCustomerUsername()
+
+public void setCustomerUsername(String customerUsername)
+
+public int getAuthorizationNumber()
+
+public void setAuthorizationNumber(int authorizationNumber)
+
+public OrderStatus getOrderStatus()
+
+public void setOrderStatus(OrderStatus orderStatus)
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>580</x><y>29</y><w>320</w><h>170</h></coordinates><panel_attributes>&lt;&lt;entity&gt;&gt;
+Account
+--
+username: string
+password: byte[]
+--
+getUsername(): string
+setUsername(newUsername: string, 
+currentUsername: string, plainText: string)
+setPassword(newPlainText: string, username: 
+string, currentPlainText: string)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>570</x><y>229</y><w>210</w><h>70</h></coordinates><panel_attributes>&lt;&lt;interface&gt;&gt;
+Bank
+--
+getPurchaseAuhtorizationNumber(): int</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>570</x><y>309</y><w>210</w><h>190</h></coordinates><panel_attributes>&lt;&lt;entity&gt;&gt;
+Card
+--
+number: string
+name: string
+expirationMonth: string
+expirationYear: string
+securityCode: string
+creditLimit: double
+--
+getLastFourDigits(): string
+getCreditLimit(): double
+setCreditLimit(creditLimit: double)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>570</x><y>509</y><w>250</w><h>180</h></coordinates><panel_attributes>&lt;&lt;entity&gt;&gt;
+Customer
+--
+card: Card
+phoneNumber: String
+address: String
+cart: ArrayList
+--
+getCard(): Card
+getCart(): ArrayList
+addToCart(item: Item, amount: int)
+removeFromCart(item: Item, amount: int)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>350</x><y>379</y><w>210</w><h>190</h></coordinates><panel_attributes>&lt;&lt;entity&gt;&gt;
+Item
+--
+name: String
+price: double
+--
+getName(): string
+getPrice(): double
+setName(name: string)
+setPrice(price: double)</panel_attributes><additional_attributes></additional_attributes></element></diagram>
