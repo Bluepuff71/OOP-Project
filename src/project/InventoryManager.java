@@ -1,6 +1,6 @@
-package Project;
+package project;
 
-import FileStuff.Serializer;
+import fileStuff.Serializer;
 
 import java.io.IOException;
 import java.util.ArrayList;

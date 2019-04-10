@@ -1,4 +1,4 @@
-package Project;
+package project;
 
 public class NoAccountFoundException extends Exception {
     @Override

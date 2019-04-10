@@ -1,4 +1,4 @@
-package Project;
+package project;
 
 public class InvalidCardException extends Exception {
     @Override

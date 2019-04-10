@@ -1,4 +1,4 @@
-package Project;
+package project;
 
 /**
  * All the information for a debit/credit card

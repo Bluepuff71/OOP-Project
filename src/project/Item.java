@@ -1,4 +1,4 @@
-package Project;
+package project;
 
 /**
  * An item is an entity that is sold in the store
