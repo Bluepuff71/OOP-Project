@@ -2,7 +2,7 @@ package Project;
 
 import java.util.Random;
 
-public class Bank {
+public final class Bank {
     /**
      * Generates a authorization number
      *

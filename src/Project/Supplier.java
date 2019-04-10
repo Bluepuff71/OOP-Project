@@ -2,12 +2,12 @@ package Project;
 
 import java.util.ArrayList;
 
-public class Supplier extends Account implements java.io.Serializable {
+public final class Supplier extends Account implements java.io.Serializable {
 
     /**
      * The list of orders that have been created
      */
-    private ArrayList<Order> deliveryOrderList;
+    private static ArrayList<Order> deliveryOrderList = new ArrayList<>();
 
     /**
      * Creates a supplier account with an empty order list
@@ -17,18 +17,6 @@ public class Supplier extends Account implements java.io.Serializable {
      */
     public Supplier(String username, String plainText) {
         super(username, plainText);
-        this.deliveryOrderList = new ArrayList<>();
-    }
-
-    /**
-     * Creates a supplier account
-     * @param username the username of the supplier
-     * @param plainText the plaintext password of the supplier
-     * @param deliveryOrderList the list of orders that have been created
-     */
-    public Supplier(String username, String plainText, ArrayList<Order> deliveryOrderList) {
-        super(username, plainText);
-        this.deliveryOrderList = deliveryOrderList;
     }
 
     /**

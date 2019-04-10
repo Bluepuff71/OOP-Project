@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * A customer account for standard clients
  */
-public class Customer extends Account implements java.io.Serializable {
+public final class Customer extends Account implements java.io.Serializable {
 
     /**
      * The debit/credit card information for the customer
@@ -28,18 +28,9 @@ public class Customer extends Account implements java.io.Serializable {
     private ArrayList<Shipment> cart;
 
     /**
-     * Creates a new customer account with only a username and password
-     *
-     * @param username
-     * @param plainText
+     * The orders that the customer has created
      */
-    public Customer(String username, String plainText) {
-        super(username, plainText);
-        this.phoneNumber = null;
-        this.address = null;
-        this.card = null;
-        this.cart = null;
-    }
+    private ArrayList<Order> orders;
 
     /**
      * Creates a new customer account with an empty cart
@@ -119,5 +110,23 @@ public class Customer extends Account implements java.io.Serializable {
             totalCost += (shipment.getItem().getPrice() * shipment.getAmount());
         }
         return totalCost;
+    }
+
+    /**
+     * Adds an order to the customer's order list
+     *
+     * @param order the order to add
+     */
+    public void addOrder(Order order) {
+        this.orders.add(order);
+    }
+
+    /**
+     * Removes an order from the customer's order list
+     *
+     * @param order the order to remove
+     */
+    public void removeOrder(Order order) {
+        this.orders.remove(order);
     }
 }

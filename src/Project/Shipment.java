@@ -1,6 +1,6 @@
 package Project;
 
-public class Shipment implements java.io.Serializable {
+public final class Shipment implements java.io.Serializable {
 
     private Item item;
 

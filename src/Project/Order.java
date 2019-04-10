@@ -2,7 +2,7 @@ package Project;
 
 import java.util.ArrayList;
 
-public class Order implements java.io.Serializable {
+public final class Order implements java.io.Serializable {
     /**
      * The username of the customer
      */

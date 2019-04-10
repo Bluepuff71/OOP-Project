@@ -3,7 +3,7 @@ package Project;
 /**
  * An item is an entity that is sold in the store
  */
-public class Item implements java.io.Serializable {
+public final class Item implements java.io.Serializable {
 
     /**
      * The item's name
