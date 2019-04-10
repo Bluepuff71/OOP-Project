@@ -46,7 +46,7 @@ public final class Supplier extends Account implements java.io.Serializable {
     /*public void processDeliveryOrder(Order order, Storefront storefront){
 
         for(Shipment shipment : order.getOrderedItems()){
-            if(storefront.inventoryCheck(shipment.getItem(), shipment.getAmount())){
+            if(storefront.itemInStock(shipment.getItem(), shipment.getAmount())){
 
             } else{
                 throw new OutOfStockException();

@@ -15,42 +15,53 @@ public final class CustomerInterface {
     private LoginManager loginManager;
 
     /**
+     * The storefront that the customer will browse
+     */
+    private InventoryManager inventoryManager;
+
+    /**
      * Creates a CustomerInterface with a specified loginManager
      *
      * @param loginManager the loginManager to use
      */
-    public CustomerInterface(LoginManager loginManager) {
+    public CustomerInterface(LoginManager loginManager, InventoryManager inventoryManager) {
         this.loginManager = loginManager;
+        this.inventoryManager = inventoryManager;
     }
 
     /**
      * The account step of the customer interface
      */
     public void initalMenu() {
-        System.out.println("What would you like to do?");
-        System.out.println("[1] Login");
-        System.out.println("[2] Create Account");
-        System.out.println("[3] Go back");
-        System.out.print("Please choose an option: ");
-        switch (Runner.scanner.nextInt()) {
-            case 1: //login
-                this.login();
-                this.mainInterface();
-                break;
-            case 2: //create account
-                currentCustomer = this.createAccount("", "", "", "", "", "");
-                //if the user cancelled account creation
-                if (currentCustomer == null) {
-                    initalMenu();
-                } else {
-                    System.out.println("Account has been created.");
+        try {
+            System.out.println("What would you like to do?");
+            System.out.println("[1] Login");
+            System.out.println("[2] Create Account");
+            System.out.println("[3] Go back");
+            System.out.print("Please choose an option: ");
+            switch (Runner.scanner.nextInt()) {
+                case 1: //login
+                    this.login();
                     this.mainInterface();
-                }
-                break;
-            case 3:
-                return;
-            default:
-                System.out.println("That is not an option.\nPlease try again");
+                    break;
+                case 2: //create account
+                    currentCustomer = this.createAccount("", "", "", "", "", "");
+                    //if the user didn't cancel account creation
+                    if (currentCustomer != null) {
+                        System.out.println("Account has been created.");
+                        this.mainInterface();
+                    } else {
+                        System.out.println("Account creation has been cancelled.\nReturning to menu.");
+                    }
+                    break;
+                case 3:
+                    return;
+                default:
+                    System.out.println("That is not an option.\nPlease try again");
+                    break;
+            }
+        } catch (Exception e) {
+            System.out.println("That is not an option.\nPlease try again");
         }
         initalMenu();
     }
@@ -73,14 +84,8 @@ public final class CustomerInterface {
             System.out.println("That username/password combination is not correct.");
         }
         System.out.println("Would you like to try again? (Y,N): ");
-        while (true) {
-            if (Runner.scanner.nextLine().toLowerCase().equals("y")) {
-                login();
-            } else if (Runner.scanner.nextLine().toLowerCase().equals("n")) {
-                return;
-            } else {
-                System.out.println("That is not an option\nPlease try again");
-            }
+        if (yesNoDialog()) {
+            this.login();
         }
     }
 
@@ -91,18 +96,76 @@ public final class CustomerInterface {
         this.currentCustomer = null;
     }
 
+
     /**
      * The main menu of the customer interface
      */
     private void mainInterface() {
-        System.out.println("What would you like to do?");
-        System.out.println("[1] Browse Catalog");
-        System.out.println("[2] View Orders");
-        System.out.println("[3] Logout");
-        System.out.print("Please choose an option: ");
-        switch (Runner.scanner.nextInt()) {
-
+        try {
+            System.out.println("What would you like to do?");
+            System.out.println("[1] Browse Catalog");
+            System.out.println("[2] Checkout");
+            System.out.println("[3] View Cart");
+            System.out.println("[4] View Orders");
+            System.out.println("[5] Logout");
+            System.out.print("Please choose an option: ");
+            switch (Runner.scanner.nextInt()) {
+                case 1:
+                    selectItemInterface();
+                    break;
+                case 2:
+                    if (currentCustomer.getCart().isEmpty()) {
+                        System.out.println("Your cart is empty.");
+                    } else {
+                        checkOutInterface();
+                    }
+                    break;
+                case 3:
+                    if (currentCustomer.getCart().isEmpty()) {
+                        System.out.println("Your cart is empty.");
+                    } else {
+                        printCart();
+                    }
+                    break;
+                default:
+                    System.out.println("That is not an option.\nPlease try again.");
+                    break;
+            }
+        } catch (Exception e) {
+            System.out.println("That is not an option.\nPlease try again.");
         }
+        mainInterface();
+    }
+
+    //TODO
+    private void checkOutInterface() {
+
+    }
+
+    /**
+     * Interface for users to select items from the store
+     */
+    private void selectItemInterface() {
+        System.out.println("----------[ StoreFront ]----------\n");
+        System.out.println(this.inventoryManager.toString());
+        System.out.print("Type the item(s) you want to add to your cart: ");
+        int i;
+        do {
+            try {
+                i = Runner.scanner.nextInt();
+            } catch (Exception e) {
+                System.out.println("There was an issue with this selection, skipping.");
+                continue;
+            }
+            Shipment selectedShipment = this.inventoryManager.getShipmentFromInventory(i - 1);
+            System.out.printf("-----[ Selected Item: %s - %d Left ]-----\n", selectedShipment.getItem().getName(), selectedShipment.getAmount());
+            System.out.print("How many would you like to add to your cart?: ");
+            int amount = Runner.scanner.nextInt();
+            currentCustomer.addToCart(selectedShipment.getItem(), amount);
+            System.out.printf("%d %s added to cart.\n", amount, selectedShipment.getItem().getName());
+        }
+        while (!Runner.scanner.hasNextLine());
+        System.out.println("Back to main menu.");
     }
 
     /**
@@ -179,5 +242,33 @@ public final class CustomerInterface {
             System.out.println("There was an error.\nPlease try again.");
         }
         return createAccount(username, plainText, phoneNumber, address, cardNumber, error);
+    }
+
+    /**
+     * Prints a dialog with yes or no options
+     *
+     * @return true if yes, false if no
+     */
+    private boolean yesNoDialog() {
+        while (true) {
+            if (Runner.scanner.nextLine().toLowerCase().equals("y")) {
+                return true;
+            } else if (Runner.scanner.nextLine().toLowerCase().equals("n")) {
+                return false;
+            } else {
+                System.out.println("That is not an option\nPlease try again");
+            }
+        }
+    }
+
+    /**
+     * Prints the customer's cart
+     */
+    private void printCart() {
+        System.out.println("----------[ Cart ]----------");
+        for (Shipment shipment : currentCustomer.getCart()) {
+            System.out.println(shipment.toString());
+        }
+        System.out.printf("Total Cost: %.2f", currentCustomer.getCartTotalCost());
     }
 }

@@ -6,12 +6,12 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public final class LoginManager {
-    public HashMap<String, Account> accountList;
+    private HashMap<String, Account> accountList;
 
 
-    public LoginManager(String filePath) {
+    public LoginManager(String fileName) {
         try {
-            accountList = Serializer.readObject("Accounts.dat");
+            accountList = Serializer.readObject(fileName);
         } catch (IOException e) {
             accountList = new HashMap<>();
         } catch (Exception e) {

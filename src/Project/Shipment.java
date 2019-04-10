@@ -16,15 +16,16 @@ public final class Shipment implements java.io.Serializable {
         return item;
     }
 
-    public void setItem(Item item) {
-        this.item = item;
-    }
-
     public int getAmount() {
         return amount;
     }
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s - $%.2f - %d Left", item.getName(), item.getPrice(), amount);
     }
 }
