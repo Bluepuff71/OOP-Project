@@ -1,4 +1,4 @@
-package project;
+package Project;
 
 public class ItemNotFoundException extends Exception {
 

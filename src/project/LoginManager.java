@@ -1,6 +1,6 @@
-package project;
+package Project;
 
-import fileStuff.Serializer;
+import FileStuff.Serializer;
 
 import java.io.IOException;
 import java.util.HashMap;

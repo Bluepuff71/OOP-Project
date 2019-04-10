@@ -1,4 +1,4 @@
-package project;
+package Project;
 
 public class UnauthorizedException extends Exception {
     public UnauthorizedException() {
