@@ -1,4 +1,4 @@
-package Project;
+package project;
 
 public class OutOfStockException extends Exception {
     private Item item;

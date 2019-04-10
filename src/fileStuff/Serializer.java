@@ -1,4 +1,4 @@
-package FileStuff;
+package fileStuff;
 
 import java.io.*;
 

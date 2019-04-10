@@ -1,7 +1,7 @@
 package runner;
 
 import java.util.Scanner;
-import Project.*;
+import project.*;
 
 public class Runner {
 

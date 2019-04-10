@@ -1,6 +1,6 @@
-package Testing;
+package testing;
 
-import FileStuff.Serializer;
+import fileStuff.Serializer;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -63,7 +63,7 @@ public class Testing {
             scanner.close();
             return;
         }
-        System.out.println("Testing will now begin:");
+        System.out.println("testing will now begin:");
         //Start the password testing
         boolean hasTriedPassword = false; //this is here to confirm that the password has been attempted before saying incorrect password
         do {
@@ -86,7 +86,7 @@ public class Testing {
         //print out all the information on the TestObject
         System.out.println(testObject.toString()); //the password field is suppose to be a jumbled mess because it has been hashed. The plaintext password is not stored
         testObject.printCart();
-        System.out.print("Testing completed.\n" +
+        System.out.print("testing completed.\n" +
                 "Press enter to stop the program.");
         scanner.nextLine();
         scanner.close();

@@ -1,4 +1,4 @@
-package Project;
+package project;
 
 public final class Shipment implements java.io.Serializable {
 
