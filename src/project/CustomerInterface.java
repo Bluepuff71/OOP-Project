@@ -170,7 +170,7 @@ public final class CustomerInterface {
     private void checkOutInterface() {
         System.out.println("----------[ Checkout ]-----------");
         printCart();
-        System.out.println("----------------------------");
+        System.out.println("---------------------------------");
         System.out.printf("Total Cost: %.2f\n", currentCustomer.getCartTotalCost());
         System.out.println("-----[ Payment ]-----");
         System.out.printf("Card #: XXXX XXXX XXXX %s\n", currentCustomer.getCard().getLastFourDigits());
