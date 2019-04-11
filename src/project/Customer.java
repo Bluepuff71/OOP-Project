@@ -80,7 +80,7 @@ public final class Customer extends Account implements java.io.Serializable {
      */
     public void removeFromCart(Item item) {
         for (Shipment shipment : cart) {
-            if (shipment.getItem().equals(item)) {
+            if (shipment.getItem().getName().equals(item.getName())) {
                 cart.remove(shipment);
                 break;
             }
@@ -94,12 +94,12 @@ public final class Customer extends Account implements java.io.Serializable {
      * @param amount the amount to remove
      */
     public void removeFromCart(Item item, int amount) {
-        for (Shipment shipment : cart) {
-            if (shipment.getItem().equals(item)) {
-                if (shipment.getAmount() <= amount) {
-                    cart.remove(shipment);
+        for (Shipment cartItem : cart) {
+            if (cartItem.getItem().getName().equals(item.getName())) {
+                if (cartItem.getAmount() <= amount) {
+                    cart.remove(cartItem);
                 } else {
-                    shipment.setAmount(shipment.getAmount() - amount);
+                    cartItem.setAmount(cartItem.getAmount() - amount);
                 }
                 break;
             }

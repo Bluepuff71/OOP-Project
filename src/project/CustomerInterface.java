@@ -119,7 +119,7 @@ public final class CustomerInterface {
             System.out.println("What would you like to do?");
             System.out.println("[1] Browse Catalog");
             System.out.println("[2] Checkout");
-            System.out.println("[3] View Cart");
+            System.out.println("[3] View/Edit Cart");
             System.out.println("[4] View Orders");
             System.out.println("[5] Logout");
             System.out.print("Please choose an option: ");
@@ -140,14 +140,14 @@ public final class CustomerInterface {
                     if (currentCustomer.getCart().isEmpty()) {
                         System.out.println("Your cart is empty.");
                     } else {
-                        printCart();
+                        editCartInterface();
                     }
                     break;
                 case 4:
                     if (currentCustomer.getOrders().isEmpty()) {
                         System.out.println("You have not placed any orders.");
                     } else {
-                        printOrdersInterface();
+                        ordersInterface();
                     }
                     break;
                 case 5:
@@ -169,7 +169,7 @@ public final class CustomerInterface {
      */
     private void checkOutInterface() {
         System.out.println("----------[ Checkout ]-----------");
-        printCart();
+        editCartInterface();
         System.out.println("---------------------------------");
         System.out.printf("Total Cost: %.2f\n", currentCustomer.getCartTotalCost());
         System.out.println("-----[ Payment ]-----");
@@ -334,18 +334,104 @@ public final class CustomerInterface {
     /**
      * Prints the customer's cart
      */
-    private void printCart() {
-        System.out.println("----------[ Cart ]----------");
-        for (Shipment shipment : currentCustomer.getCart()) {
-            System.out.printf("%d %s - $%.2f\n", shipment.getAmount(), shipment.getItem().getName(), shipment.getItem().getPrice());
+    private void editCartInterface() {
+        try {
+            System.out.println("----------[ Cart ]----------");
+            for (Shipment shipment : currentCustomer.getCart()) {
+                System.out.printf("%d %s - $%.2f\n", shipment.getAmount(), shipment.getItem().getName(), shipment.getItem().getPrice());
+            }
+            System.out.println("----------------------------");
+            System.out.println("Cart Options:");
+            System.out.println("[1] Remove Item");
+            System.out.println("[2] Go Back");
+            System.out.println("Please choose an option: ");
+            int selection = Runner.scanner.nextInt();
+            Runner.scanner.nextLine();
+            switch (selection) {
+                case 1:
+                    removeFromCartInterface();
+                    break;
+                case 2:
+                    return;
+                default:
+                    System.out.println("That is not an option.\nPlease try again.");
+                    break;
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("That is not an option.\nPlease try again.");
+        }
+        editCartInterface();
+    }
+
+    private void removeFromCartInterface() {
+        System.out.println("----[ Remove From Cart ]----");
+        int i = 1;
+        for (Shipment cartItem : currentCustomer.getCart()) {
+            System.out.printf("[%d] %d %s - $%.2f\n", i, cartItem.getAmount(), cartItem.getItem().getName(), cartItem.getItem().getPrice());
+            i++;
         }
         System.out.println("----------------------------");
+        System.out.printf("[%d] Go Back\n", currentCustomer.getCart().size() + 1);
+        System.out.println("Please choose an option: ");
+        try {
+            int selection = Runner.scanner.nextInt();
+            Runner.scanner.nextLine();
+            if (selection != currentCustomer.getCart().size() + 1) {
+                Shipment selectedCartItem = currentCustomer.getCart().get(selection - 1);
+                while (true) {
+                    System.out.printf("-----[ Selected Item: %s ]-----\n", selectedCartItem.getItem().getName());
+                    System.out.println("[1] Remove Amount");
+                    System.out.println("[2] Remove All");
+                    System.out.println("[3] Go Back");
+                    int choice = Runner.scanner.nextInt();
+                    Runner.scanner.nextLine();
+                    switch (choice) {
+                        case 1:
+                            while (true) {
+                                try {
+                                    System.out.printf("-----[ Selected Item: %s - Amount: %d ]-----\n", selectedCartItem.getItem().getName(), selectedCartItem.getAmount());
+                                    System.out.print("How many would you like to remove: ");
+                                    int amountToRemove = Runner.scanner.nextInt();
+                                    Runner.scanner.nextLine();
+                                    if (amountToRemove < 1) {
+                                        System.out.println("The amount to remove must be greater than 0.\nPlease try again.");
+                                    } else if (amountToRemove > selectedCartItem.getAmount()) {
+                                        System.out.println("The amount to remove can't be larger than the amount in the cart.\nPlease try again.");
+                                    } else {
+                                        System.out.printf("%d %s removed from cart\n", amountToRemove, selectedCartItem.getItem().getName());
+                                        currentCustomer.removeFromCart(selectedCartItem.getItem(), amountToRemove);
+                                        break;
+                                    }
+                                } catch (InputMismatchException e) {
+                                    System.out.println("That is not a valid amount.\nPlease try again.");
+                                }
+                            }
+                            break;
+                        case 2:
+                            System.out.printf("%s removed from cart\n", selectedCartItem.getItem().getName());
+                            currentCustomer.removeFromCart(selectedCartItem.getItem());
+                            break;
+                        case 3:
+                            break;
+                        default:
+                            System.out.println("That is not an option.\nPlease try again.");
+                            continue;
+                    }
+                    break;
+                }
+            } else {
+                return;
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("That is not an option.\nPlease try again.");
+        }
+        removeFromCartInterface();
     }
 
     /**
      * Prints the customer's orders to the screen
      */
-    private void printOrdersInterface() {
+    private void ordersInterface() {
         while (true) {
             System.out.println("----------[ Orders ]----------");
             int i = 1;
