@@ -39,10 +39,11 @@ public final class CustomerInterface {
             System.out.println("[2] Create Account");
             System.out.println("[3] Go back");
             System.out.print("Please choose an option: ");
-            switch (Runner.scanner.nextInt()) {
+            int selection = Runner.scanner.nextInt();
+            Runner.scanner.nextLine();
+            switch (selection) {
                 case 1: //login
                     this.login();
-                    this.mainInterface();
                     break;
                 case 2: //create account
                     currentCustomer = this.createAccount("", "", "", "", "", "");
@@ -86,6 +87,8 @@ public final class CustomerInterface {
         System.out.println("Would you like to try again? (Y,N): ");
         if (yesNoDialog()) {
             this.login();
+        } else {
+            this.initalMenu();
         }
     }
 
@@ -127,6 +130,17 @@ public final class CustomerInterface {
                         printCart();
                     }
                     break;
+                case 4:
+                    if (currentCustomer.getOrders().isEmpty()) {
+                        System.out.println("You have not placed any orders.");
+                    } else {
+                        printOrdersInterface();
+                    }
+                    break;
+                case 5:
+                    currentCustomer = null;
+                    System.out.println("You have been logged out.");
+                    return;
                 default:
                     System.out.println("That is not an option.\nPlease try again.");
                     break;
@@ -139,7 +153,36 @@ public final class CustomerInterface {
 
     //TODO
     private void checkOutInterface() {
-
+        System.out.println("----------[ Checkout ]-----------");
+        printCart();
+        System.out.println("----------------------------");
+        System.out.printf("Total Cost: %.2f\n", currentCustomer.getCartTotalCost());
+        System.out.println("-----[ Payment ]-----");
+        System.out.printf("Card #: XXXX XXXX XXXX %s\n", currentCustomer.getCard().getLastFourDigits());
+        System.out.println("Confirm Payment? (Y,N) :");
+        if (yesNoDialog()) {
+            //confirm
+            while (true) {
+                try {
+                    System.out.println("Verifying Payment Method...");
+                    currentCustomer.addOrder(inventoryManager.createOrderRequest(currentCustomer));
+                    break;
+                } catch (InvalidCardException e) {
+                    System.out.println("Your card number is invalid.");
+                } catch (CreditLimitException e) {
+                    System.out.println("There is not enough credit remaining on the specified card.");
+                }
+                System.out.print("Would you like to input a different card? (Y,N): ");
+                if (yesNoDialog()) {
+                    System.out.print("Enter new Card Number: ");
+                    String cardNumber = Runner.scanner.nextLine();
+                    currentCustomer.getCard().setNumber(cardNumber);
+                }
+            }
+        } else {
+            //cancel
+            System.out.println("Order Cancelled");
+        }
     }
 
     /**
@@ -182,6 +225,14 @@ public final class CustomerInterface {
     private Customer createAccount(String username, String plainText, String phoneNumber, String address, String cardNumber, String error) {
         if (username.equals("") || plainText.equals("") || phoneNumber.equals("") || address.equals("") || cardNumber.equals("")) {
             error = "Error: One or more fields have not been completed.\n";
+        } else if (cardNumber.length() != 16) {
+            error = "Error: Card number must be exactly 16 numbers long";
+        } else if (cardNumber.matches("[^0-9]")) {
+            error = "Error: Card number may only contain numbers";
+        } else if (phoneNumber.length() != 10) {
+            error = "Error: Phone numbers can only be 10 characters long.";
+        } else if (phoneNumber.matches("[^0-9]")) {
+            error = "Error: Phone number may only contain numbers";
         } else {
             error = "";
         }
@@ -210,15 +261,10 @@ public final class CustomerInterface {
                     plainText = Runner.scanner.nextLine();
                     break;
                 case 3:
-                    while (true) {
-                        System.out.print("Enter Phone #: ");
-                        phoneNumber = Runner.scanner.nextLine();
-                        if (phoneNumber.length() != 10) {
-                            System.out.println("Phone numbers can only be 10 characters long.\nPlease Try Again.");
-                        } else {
-                            break;
-                        }
-                    }
+                    System.out.print("Enter Phone #: ");
+                    phoneNumber = Runner.scanner.nextLine();
+                    phoneNumber = phoneNumber.replace(" ", "");
+                    phoneNumber = phoneNumber.replace("-", "");
                     break;
                 case 4:
                     System.out.print("Enter Address: ");
@@ -227,6 +273,7 @@ public final class CustomerInterface {
                 case 5:
                     System.out.print("Enter Card Number: ");
                     cardNumber = Runner.scanner.nextLine();
+                    cardNumber = cardNumber.replace(" ", "");
                     break;
                 case 6:
                     if (error.equals("")) {
@@ -251,9 +298,10 @@ public final class CustomerInterface {
      */
     private boolean yesNoDialog() {
         while (true) {
-            if (Runner.scanner.nextLine().toLowerCase().equals("y")) {
+            String selection = Runner.scanner.nextLine();
+            if (selection.toLowerCase().equals("y")) {
                 return true;
-            } else if (Runner.scanner.nextLine().toLowerCase().equals("n")) {
+            } else if (selection.toLowerCase().equals("n")) {
                 return false;
             } else {
                 System.out.println("That is not an option\nPlease try again");
@@ -269,6 +317,40 @@ public final class CustomerInterface {
         for (Shipment shipment : currentCustomer.getCart()) {
             System.out.println(shipment.toString());
         }
-        System.out.printf("Total Cost: %.2f", currentCustomer.getCartTotalCost());
+    }
+
+    private void printOrdersInterface() {
+        while (true) {
+            System.out.println("----------[ Orders ]----------");
+            int i = 1;
+            for (Order order : currentCustomer.getOrders()) {
+                System.out.printf("[%d] Order %d - %s\n", i, i, order.getOrderStatus().toString());
+                i++;
+            }
+            System.out.printf("[%d] Go back\n", i);
+            System.out.print("Which order would you like to view?: ");
+            if (Runner.scanner.hasNextInt()) {
+                int selection = Runner.scanner.nextInt();
+                //If they selected go back
+                if (selection == i) {
+                    return;
+                } else if (selection > i || selection < 1) {
+                    System.out.println("That is not an option");
+                } else {
+                    i = 1;
+                    System.out.printf("----------[ Order %d ]----------\n", selection);
+                    Order selectedOrder = currentCustomer.getOrders().get(selection);
+                    for (Shipment shipment : selectedOrder.getOrderedItems()) {
+                        System.out.printf("Item %d: %s - Amount: %d\n", i, shipment.getItem().getName(), shipment.getAmount());
+                    }
+                    System.out.printf("\nOrder Status: %s", selectedOrder.getOrderStatus().toString());
+                    System.out.println("--------------------------------");
+                    System.out.print("Press enter when you are done viewing.");
+                    Runner.scanner.nextLine();
+                }
+            } else {
+                System.out.println("That is not an option");
+            }
+        }
     }
 }

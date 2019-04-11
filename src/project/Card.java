@@ -26,6 +26,22 @@ public final class Card implements java.io.Serializable {
         this.creditLimit = creditLimit;
     }
 
+    public void setNumber(String number) {
+        number = number.replace(" ", "");
+        this.number = number;
+    }
+
+    //TODO move card validation to inside card so card.isValid
+    public boolean isValid() {
+        if (number.length() != 16) {
+            return false;
+        } else if (number.matches("[^0-9]")) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     /**
      * Gets the last 4 digits of the card
      *

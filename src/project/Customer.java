@@ -112,6 +112,10 @@ public final class Customer extends Account implements java.io.Serializable {
         return totalCost;
     }
 
+    public ArrayList<Order> getOrders() {
+        return orders;
+    }
+
     /**
      * Adds an order to the customer's order list
      *

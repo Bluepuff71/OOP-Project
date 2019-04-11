@@ -69,9 +69,4 @@ public final class Order implements java.io.Serializable {
     public void setOrderStatus(OrderStatus orderStatus) {
         this.orderStatus = orderStatus;
     }
-
-    @Override
-    public String toString() {
-        return "Display order";
-    }
 }

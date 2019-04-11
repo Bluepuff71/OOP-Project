@@ -1,8 +1,5 @@
 package project;
 
-import fileStuff.Serializer;
-
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class InventoryManager implements java.io.Serializable {
@@ -12,14 +9,8 @@ public class InventoryManager implements java.io.Serializable {
      */
     private ArrayList<Shipment> inventory;
 
-    public InventoryManager(String fileName) {
-        try {
-            inventory = Serializer.readObject(fileName);
-        } catch (IOException e) {
-            inventory = new ArrayList<>();
-        } catch (Exception e) {
-            System.out.println("There was an error.");
-        }
+    public InventoryManager() {
+        inventory = new ArrayList<>();
     }
 
     /**
@@ -27,17 +18,10 @@ public class InventoryManager implements java.io.Serializable {
      *
      * @param customer the customer that is creating the order
      * @return the order that is created
-     * @throws ItemNotFoundException if one of the items in the cart is invalid
      * @throws InvalidCardException  if the customer's card number is not valid
      * @throws CreditLimitException  if the purchase would exceed the customer's credit limit
      */
-    public Order createOrderRequest(Customer customer) throws ItemNotFoundException, InvalidCardException, CreditLimitException {
-        //Check if the items exist in the store
-        for (Shipment shipment : customer.getCart()) {
-            if (!itemInStock(shipment.getItem(), 1)) {
-                throw new ItemNotFoundException();
-            }
-        }
+    public Order createOrderRequest(Customer customer) throws InvalidCardException, CreditLimitException {
         return new Order(customer.getUsername(), customer.getCart(), Bank.getPurchaseAuthorizationNumber(customer.getCard(), customer.getCartTotalCost()));
     }
 
@@ -63,7 +47,7 @@ public class InventoryManager implements java.io.Serializable {
      * @return the shipment that is found
      * @throws ItemNotFoundException if the item is not found
      */
-    public Shipment getShipmentFromInventory(Item item) throws ItemNotFoundException {
+    public Shipment getShipmentFromInventory(Item item) throws ItemNotFoundException, NullPointerException {
         for (Shipment shipment : inventory) {
             if (shipment.getItem().equals(item)) {
                 return shipment;
@@ -77,8 +61,9 @@ public class InventoryManager implements java.io.Serializable {
      *
      * @param i the index to search
      * @return the shipment that is found
+     * @throws NullPointerException if the index returns null
      */
-    public Shipment getShipmentFromInventory(int i) {
+    public Shipment getShipmentFromInventory(int i) throws NullPointerException {
         return this.inventory.get(i);
     }
 
@@ -92,7 +77,7 @@ public class InventoryManager implements java.io.Serializable {
         try {
             Shipment selectedShipment = getShipmentFromInventory(item);
             selectedShipment.setAmount(selectedShipment.getAmount() + orderAmount);
-        } catch (ItemNotFoundException e) {
+        } catch (ItemNotFoundException | NullPointerException e) {
             inventory.add(new Shipment(item, orderAmount));
         }
     }
