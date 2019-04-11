@@ -46,7 +46,7 @@ public final class CustomerInterface {
                     this.login();
                     break;
                 case 2: //create account
-                    currentCustomer = this.createAccount("", "", "", "", "", "");
+                    currentCustomer = this.createAccount("", "", "", "", "");
                     //if the user didn't cancel account creation
                     if (currentCustomer != null) {
                         System.out.println("Account has been created.");
@@ -138,7 +138,7 @@ public final class CustomerInterface {
                     }
                     break;
                 case 5:
-                    currentCustomer = null;
+                    logout();
                     System.out.println("You have been logged out.");
                     return;
                 default:
@@ -221,10 +221,10 @@ public final class CustomerInterface {
      * @param phoneNumber the default phone number
      * @param address     the default address
      * @param cardNumber  the default card number
-     * @param error       the default error
      * @return the new customer or null if the user backs out
      */
-    private Customer createAccount(String username, String plainText, String phoneNumber, String address, String cardNumber, String error) {
+    private Customer createAccount(String username, String plainText, String phoneNumber, String address, String cardNumber) {
+        String error;
         if (username.equals("") || plainText.equals("") || phoneNumber.equals("") || address.equals("") || cardNumber.equals("")) {
             error = "Error: One or more fields have not been completed.";
         } else if (cardNumber.length() != 16) {
@@ -290,7 +290,7 @@ public final class CustomerInterface {
         } catch (Exception e) {
             System.out.println("There was an error.\nPlease try again.");
         }
-        return createAccount(username, plainText, phoneNumber, address, cardNumber, error);
+        return createAccount(username, plainText, phoneNumber, address, cardNumber);
     }
 
     /**
