@@ -240,7 +240,7 @@ public final class CustomerInterface {
             error = "Error: Phone number may only contain numbers\n";
         } else if (loginManager.usernameTaken(username)) {
             error = "Error: That username is taken\n";
-        } else if (username.matches(" ")) {
+        } else if (username.contains(" ")) {
             error = "Error: Username contains invalid characters\n";
         } else {
             error = "";
