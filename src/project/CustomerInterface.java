@@ -333,6 +333,7 @@ public final class CustomerInterface {
         for (Shipment shipment : currentCustomer.getCart()) {
             System.out.printf("%d %s - $%.2f\n", shipment.getAmount(), shipment.getItem().getName(), shipment.getItem().getPrice());
         }
+        System.out.println("----------------------------");
     }
 
     /**
