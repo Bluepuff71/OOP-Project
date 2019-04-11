@@ -49,6 +49,7 @@ public final class CustomerInterface {
                     currentCustomer = this.createAccount("", "", "", "", "");
                     //if the user didn't cancel account creation
                     if (currentCustomer != null) {
+                        loginManager.addCustomerAccount(currentCustomer);
                         System.out.println("Account has been created.");
                         this.mainInterface();
                     } else {
@@ -61,6 +62,8 @@ public final class CustomerInterface {
                     System.out.println("That is not an option.\nPlease try again");
                     break;
             }
+        } catch (UsernameTakenException e) {
+            System.out.println("THIS ERROR SHOULDN'T BE POSSIBLE");
         } catch (Exception e) {
             System.out.println("That is not an option.\nPlease try again");
         }
@@ -226,36 +229,40 @@ public final class CustomerInterface {
     private Customer createAccount(String username, String plainText, String phoneNumber, String address, String cardNumber) {
         String error;
         if (username.equals("") || plainText.equals("") || phoneNumber.equals("") || address.equals("") || cardNumber.equals("")) {
-            error = "Error: One or more fields have not been completed.";
+            error = "Error: One or more fields have not been completed.\n";
         } else if (cardNumber.length() != 16) {
-            error = "Error: Card number must be exactly 16 numbers long";
+            error = "Error: Card number must be exactly 16 numbers long\n";
         } else if (cardNumber.matches("[^0-9]")) {
-            error = "Error: Card number may only contain numbers";
+            error = "Error: Card number may only contain numbers\n";
         } else if (phoneNumber.length() != 10) {
-            error = "Error: Phone numbers can only be 10 characters long.";
+            error = "Error: Phone numbers can only be 10 characters long.\n";
         } else if (phoneNumber.matches("[^0-9]")) {
-            error = "Error: Phone number may only contain numbers";
+            error = "Error: Phone number may only contain numbers\n";
+        } else if (loginManager.usernameTaken(username)) {
+            error = "Error: That username is taken\n";
+        } else if (username.matches(" ")) {
+            error = "Error: Username contains invalid characters\n";
         } else {
             error = "";
         }
         System.out.println("---- New Customer Account ----");
-        System.out.printf("[1] Name [%s]\n", username);
+        System.out.printf("[1] Username [%s]\n", username);
         System.out.printf("[2] Password [%s]\n", plainText);
         System.out.printf("[3] Phone # [%s]\n", phoneNumber);
         System.out.printf("[4] Address [%s]\n", address);
         System.out.printf("[5] Card # [%s]\n", cardNumber);
         if (error.equals("")) {
             System.out.println("[6] Create Account");
-        } else {
-            System.out.println(error);
-            System.out.println("All errors must be fixed before account can be created.");
         }
         System.out.println("[7] Cancel");
-        System.out.println("Please choose an option.");
+        System.out.print(error);
+        System.out.print("Please choose an option: ");
         try {
-            switch (Runner.scanner.nextInt()) {
+            int selection = Runner.scanner.nextInt();
+            Runner.scanner.nextLine();
+            switch (selection) {
                 case 1:
-                    System.out.print("Enter Name: ");
+                    System.out.print("Enter Username: ");
                     username = Runner.scanner.nextLine();
                     break;
                 case 2:

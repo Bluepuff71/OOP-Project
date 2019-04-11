@@ -18,6 +18,25 @@ public final class LoginManager implements java.io.Serializable {
     }
 
     /**
+     * Checks if the specified username is already taken
+     *
+     * @param username the username to check
+     * @return true if the username is taken, false otherwise
+     */
+    public boolean usernameTaken(String username) {
+        return accountList.containsKey(username.toLowerCase());
+    }
+
+    public final void addCustomerAccount(Customer customer) throws UsernameTakenException {
+        if (usernameTaken(customer.getUsername())) {
+            throw new UsernameTakenException();
+        } else {
+            accountList.put(customer.getUsername().toLowerCase(), customer);
+        }
+
+    }
+
+    /**
      * Gets the customer account of a specified user
      *
      * @param username  the username of the user
