@@ -74,14 +74,13 @@ public class Runner {
                     case 3:
                         Serializer.writeObject(inventoryManager, "Inventory.dat");
                         Serializer.writeObject(loginManager, "Accounts.dat");
+                        scanner.close();
                         return;
                     default:
                         System.out.println("That is not an option.\nPlease try again");
                 }
             } catch (Exception e) {
                 System.out.println("There was an error.\nPlease try again");
-            } finally {
-                scanner.close();
             }
         }
     }
