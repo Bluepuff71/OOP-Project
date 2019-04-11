@@ -48,7 +48,7 @@ public final class LoginManager implements java.io.Serializable {
      */
     public final Customer getCustomerAccount(String username, String plainText) throws NoAccountFoundException, InvalidLoginException, InvalidAccountTypeException {
         //if account exists
-        if (accountList.containsKey(username)) {
+        if (accountList.containsKey(username.toLowerCase())) {
             //Check password
             if (accountList.get(username).verifyCredentials(username, plainText)) {
                 try {
