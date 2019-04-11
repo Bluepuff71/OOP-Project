@@ -77,7 +77,7 @@ public final class CustomerInterface {
             String username = Runner.scanner.nextLine();
             System.out.print("Password: ");
             String plainText = Runner.scanner.nextLine();
-            this.currentCustomer = loginManager.getCustomerAccount(username, plainText);
+            currentCustomer = loginManager.getCustomerAccount(username, plainText);
             return;
         } catch (NoAccountFoundException e) {
             System.out.println("An account with that username doesn't exist.");
@@ -88,7 +88,7 @@ public final class CustomerInterface {
         if (yesNoDialog()) {
             this.login();
         } else {
-            this.initalMenu();
+            currentCustomer = null;
         }
     }
 
