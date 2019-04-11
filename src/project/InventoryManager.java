@@ -102,9 +102,10 @@ public class InventoryManager implements java.io.Serializable {
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        int i = 0;
+        int i = 1;
         for (Shipment shipment : this.inventory) {
             stringBuilder.append(String.format("[%d] " + shipment.toString() + "\n", i));
+            i++;
         }
         return stringBuilder.toString();
     }

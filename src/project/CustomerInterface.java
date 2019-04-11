@@ -32,7 +32,7 @@ public final class CustomerInterface {
     /**
      * The account step of the customer interface
      */
-    public void initalMenu() {
+    public void initialMenu() {
         try {
             System.out.println("What would you like to do?");
             System.out.println("[1] Login");
@@ -43,15 +43,15 @@ public final class CustomerInterface {
             Runner.scanner.nextLine();
             switch (selection) {
                 case 1: //login
-                    this.login();
+                    login();
                     break;
                 case 2: //create account
-                    currentCustomer = this.createAccount("", "", "", "", "");
+                    currentCustomer = createAccount("", "", "", "", "");
                     //if the user didn't cancel account creation
                     if (currentCustomer != null) {
                         loginManager.addCustomerAccount(currentCustomer);
                         System.out.println("Account has been created.");
-                        this.mainInterface();
+                        mainInterface();
                     } else {
                         System.out.println("Account creation has been cancelled.\nReturning to menu.");
                     }
@@ -67,7 +67,7 @@ public final class CustomerInterface {
         } catch (Exception e) {
             System.out.println("That is not an option.\nPlease try again");
         }
-        initalMenu();
+        initialMenu();
     }
 
     /**
@@ -77,21 +77,27 @@ public final class CustomerInterface {
         try {
             System.out.println("---- Login ----");
             System.out.print("Username: ");
-            String username = Runner.scanner.nextLine();
+            String username = Runner.scanner.nextLine();//grab input
             System.out.print("Password: ");
-            String plainText = Runner.scanner.nextLine();
-            currentCustomer = loginManager.getCustomerAccount(username, plainText);
-            return;
+            String plainText = Runner.scanner.nextLine(); //grab input
+            currentCustomer = loginManager.getCustomerAccount(username, plainText); //get the customer from the login manager
+            mainInterface();
         } catch (NoAccountFoundException e) {
-            System.out.println("An account with that username doesn't exist.");
+            System.out.println("Account doesn't exist");
+            System.out.println("Would you like to try again? (Y,N): ");
+            if (yesNoDialog()) {
+                this.login();
+            } else {
+                currentCustomer = null;
+            }
         } catch (InvalidLoginException | InvalidAccountTypeException e) {
             System.out.println("That username/password combination is not correct.");
-        }
-        System.out.println("Would you like to try again? (Y,N): ");
-        if (yesNoDialog()) {
-            this.login();
-        } else {
-            currentCustomer = null;
+            System.out.println("Would you like to try again? (Y,N): ");
+            if (yesNoDialog()) {
+                this.login();
+            } else {
+                currentCustomer = null;
+            }
         }
     }
 
@@ -115,7 +121,9 @@ public final class CustomerInterface {
             System.out.println("[4] View Orders");
             System.out.println("[5] Logout");
             System.out.print("Please choose an option: ");
-            switch (Runner.scanner.nextInt()) {
+            int selection = Runner.scanner.nextInt();
+            Runner.scanner.nextLine(); //catches the \n not caught by nextInt()
+            switch (selection) {
                 case 1:
                     selectItemInterface();
                     break;
@@ -148,7 +156,7 @@ public final class CustomerInterface {
                     System.out.println("That is not an option.\nPlease try again.");
                     break;
             }
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             System.out.println("That is not an option.\nPlease try again.");
         }
         mainInterface();
@@ -194,22 +202,25 @@ public final class CustomerInterface {
      * Interface for users to select items from the store
      */
     private void selectItemInterface() {
-        System.out.println("----------[ StoreFront ]----------\n");
-        System.out.println(this.inventoryManager.toString());
+        System.out.println("----------[ StoreFront ]----------");
+        System.out.print(this.inventoryManager.toString());
         System.out.print("Type the item(s) you want to add to your cart: ");
         int i;
         do {
             try {
                 i = Runner.scanner.nextInt();
+                Runner.scanner.nextLine();
             } catch (Exception e) {
                 System.out.println("There was an issue with this selection, skipping.");
                 continue;
             }
             Shipment selectedShipment = this.inventoryManager.getShipmentFromInventory(i - 1);
-            System.out.printf("-----[ Selected Item: %s - %d Left ]-----\n", selectedShipment.getItem().getName(), selectedShipment.getAmount());
+            System.out.printf("-----[ Selected Item: %s ]-----\n", selectedShipment.getItem().getName());
             System.out.print("How many would you like to add to your cart?: ");
             int amount = Runner.scanner.nextInt();
+            Runner.scanner.nextLine();
             currentCustomer.addToCart(selectedShipment.getItem(), amount);
+            //TODO fix everything freezes
             System.out.printf("%d %s added to cart.\n", amount, selectedShipment.getItem().getName());
         }
         while (!Runner.scanner.hasNextLine());

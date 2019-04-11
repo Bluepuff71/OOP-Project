@@ -52,7 +52,7 @@ public final class LoginManager implements java.io.Serializable {
             //Check password
             if (accountList.get(username.toLowerCase()).verifyCredentials(username, plainText)) {
                 try {
-                    return (Customer) accountList.get(username);
+                    return (Customer) accountList.get(username.toLowerCase());
                 } catch (ClassCastException e) {
                     throw new InvalidAccountTypeException();
                 }

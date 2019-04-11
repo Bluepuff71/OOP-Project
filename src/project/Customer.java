@@ -46,7 +46,7 @@ public final class Customer extends Account implements java.io.Serializable {
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.card = card;
-        this.cart = null;
+        this.cart = new ArrayList<>();
     }
 
     public Card getCard() {

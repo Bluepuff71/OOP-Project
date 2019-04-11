@@ -66,7 +66,7 @@ public class Runner {
                 scanner.nextLine();
                 switch (selection) {
                     case 1: //customer interface
-                        new CustomerInterface(loginManager, inventoryManager).initalMenu();
+                        new CustomerInterface(loginManager, inventoryManager).initialMenu();
                         break;
                     case 2: //supplier interface
                         System.out.println("This isn't ready yet.");
