@@ -80,6 +80,8 @@ public class Runner {
                 }
             } catch (Exception e) {
                 System.out.println("There was an error.\nPlease try again");
+            } finally {
+                scanner.close();
             }
         }
     }
