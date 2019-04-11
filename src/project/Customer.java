@@ -65,7 +65,7 @@ public final class Customer extends Account implements java.io.Serializable {
      */
     public void addToCart(Item item, int amount) {
         for (Shipment shipment : cart) {
-            if (shipment.getItem().equals(item)) {
+            if (shipment.getItem().getName().equals(item.getName())) {
                 shipment.setAmount(shipment.getAmount() + amount);
                 return;
             }

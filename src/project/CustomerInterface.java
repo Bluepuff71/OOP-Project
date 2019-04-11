@@ -214,10 +214,16 @@ public final class CustomerInterface {
             return;
         }
         Shipment selectedShipment = this.inventoryManager.getShipmentFromInventory(selectedItemID - 1);
-        System.out.printf("-----[ Selected Item: %s ]-----\n", selectedShipment.getItem().getName());
-        System.out.print("How many would you like to add to your cart?: ");
-        int amount = Runner.scanner.nextInt();
-        Runner.scanner.nextLine();
+        int amount = 1;
+        do {
+            if (amount < 1) {
+                System.out.println("Amount to add must be greater than 0");
+            }
+            System.out.printf("-----[ Selected Item: %s ]-----\n", selectedShipment.getItem().getName());
+            System.out.print("How many would you like to add to your cart?: ");
+            amount = Runner.scanner.nextInt();
+            Runner.scanner.nextLine();
+        } while (amount < 1);
         currentCustomer.addToCart(selectedShipment.getItem(), amount);
         System.out.printf("%d %s added to cart.\n", amount, selectedShipment.getItem().getName());
         selectItemInterface();
