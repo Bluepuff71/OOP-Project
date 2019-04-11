@@ -31,7 +31,11 @@ public final class Card implements java.io.Serializable {
         this.number = number;
     }
 
-    //TODO move card validation to inside card so card.isValid
+    /**
+     * Validates the card (Length = 16, Only numbers)
+     *
+     * @return true if the card is valid, false otherwise
+     */
     public boolean isValid() {
         if (number.length() != 16) {
             return false;
@@ -51,11 +55,18 @@ public final class Card implements java.io.Serializable {
         return number.substring(number.length() - 4);
     }
 
-
+    /**
+     * Sets the credit limit of the card
+     * @param creditLimit the credit limit to set
+     */
     public void setCreditLimit(double creditLimit) {
         this.creditLimit = creditLimit;
     }
 
+    /**
+     * Gets the card's credit limit
+     * @return the card's credit limit
+     */
     public double getCreditLimit() {
         return creditLimit;
     }

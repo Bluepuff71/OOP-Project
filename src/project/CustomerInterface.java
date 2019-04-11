@@ -151,7 +151,9 @@ public final class CustomerInterface {
         mainInterface();
     }
 
-    //TODO
+    /**
+     * The interface for doing checkout on a cart
+     */
     private void checkOutInterface() {
         System.out.println("----------[ Checkout ]-----------");
         printCart();
@@ -319,6 +321,9 @@ public final class CustomerInterface {
         }
     }
 
+    /**
+     * Prints the customer's orders to the screen
+     */
     private void printOrdersInterface() {
         while (true) {
             System.out.println("----------[ Orders ]----------");
