@@ -99,6 +99,10 @@ public class InventoryManager implements java.io.Serializable {
         }
     }
 
+    public int getInventorySize() {
+        return inventory.size();
+    }
+
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();

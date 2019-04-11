@@ -2,6 +2,8 @@ package project;
 
 import runner.Runner;
 
+import java.util.InputMismatchException;
+
 public final class CustomerInterface {
 
     /**
@@ -64,7 +66,7 @@ public final class CustomerInterface {
             }
         } catch (UsernameTakenException e) {
             System.out.println("THIS ERROR SHOULDN'T BE POSSIBLE");
-        } catch (Exception e) {
+        } catch (InputMismatchException e) {
             System.out.println("That is not an option.\nPlease try again");
         }
         initialMenu();
@@ -156,7 +158,7 @@ public final class CustomerInterface {
                     System.out.println("That is not an option.\nPlease try again.");
                     break;
             }
-        } catch (NullPointerException e) {
+        } catch (InputMismatchException e) {
             System.out.println("That is not an option.\nPlease try again.");
         }
         mainInterface();
@@ -204,27 +206,21 @@ public final class CustomerInterface {
     private void selectItemInterface() {
         System.out.println("----------[ StoreFront ]----------");
         System.out.print(this.inventoryManager.toString());
-        System.out.print("Type the item(s) you want to add to your cart: ");
-        int i;
-        do {
-            try {
-                i = Runner.scanner.nextInt();
-                Runner.scanner.nextLine();
-            } catch (Exception e) {
-                System.out.println("There was an issue with this selection, skipping.");
-                continue;
-            }
-            Shipment selectedShipment = this.inventoryManager.getShipmentFromInventory(i - 1);
-            System.out.printf("-----[ Selected Item: %s ]-----\n", selectedShipment.getItem().getName());
-            System.out.print("How many would you like to add to your cart?: ");
-            int amount = Runner.scanner.nextInt();
-            Runner.scanner.nextLine();
-            currentCustomer.addToCart(selectedShipment.getItem(), amount);
-            //TODO fix everything freezes
-            System.out.printf("%d %s added to cart.\n", amount, selectedShipment.getItem().getName());
+        System.out.printf("[%d] Go Back\n", this.inventoryManager.getInventorySize() + 1);
+        System.out.print("Type the item you want to add to your cart: ");
+        int selectedItemID = Runner.scanner.nextInt();
+        Runner.scanner.nextLine();
+        if (selectedItemID == this.inventoryManager.getInventorySize() + 1) {
+            return;
         }
-        while (!Runner.scanner.hasNextLine());
-        System.out.println("Back to main menu.");
+        Shipment selectedShipment = this.inventoryManager.getShipmentFromInventory(selectedItemID - 1);
+        System.out.printf("-----[ Selected Item: %s ]-----\n", selectedShipment.getItem().getName());
+        System.out.print("How many would you like to add to your cart?: ");
+        int amount = Runner.scanner.nextInt();
+        Runner.scanner.nextLine();
+        currentCustomer.addToCart(selectedShipment.getItem(), amount);
+        System.out.printf("%d %s added to cart.\n", amount, selectedShipment.getItem().getName());
+        selectItemInterface();
     }
 
     /**
@@ -335,7 +331,7 @@ public final class CustomerInterface {
     private void printCart() {
         System.out.println("----------[ Cart ]----------");
         for (Shipment shipment : currentCustomer.getCart()) {
-            System.out.println(shipment.toString());
+            System.out.printf("%d %s - $%.2f\n", shipment.getAmount(), shipment.getItem().getName(), shipment.getItem().getPrice());
         }
     }
 
