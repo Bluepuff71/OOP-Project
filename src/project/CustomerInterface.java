@@ -226,7 +226,7 @@ public final class CustomerInterface {
      */
     private Customer createAccount(String username, String plainText, String phoneNumber, String address, String cardNumber, String error) {
         if (username.equals("") || plainText.equals("") || phoneNumber.equals("") || address.equals("") || cardNumber.equals("")) {
-            error = "Error: One or more fields have not been completed.\n";
+            error = "Error: One or more fields have not been completed.";
         } else if (cardNumber.length() != 16) {
             error = "Error: Card number must be exactly 16 numbers long";
         } else if (cardNumber.matches("[^0-9]")) {
