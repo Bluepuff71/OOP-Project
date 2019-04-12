@@ -497,8 +497,9 @@ public final class CustomerInterface {
             }
             System.out.printf("[%d] Go back\n", i);
             System.out.print("Which order would you like to view?: ");
-            if (Runner.scanner.hasNextInt()) {
+            try {
                 int selection = Runner.scanner.nextInt();
+                Runner.scanner.nextLine();
                 //If they selected go back
                 if (selection == i) {
                     return;
@@ -517,7 +518,8 @@ public final class CustomerInterface {
                     System.out.println("Press enter when you are done viewing.");
                     Runner.scanner.nextLine();
                 }
-            } else {
+
+            } catch (InputMismatchException e) {
                 System.out.println("That is not an option");
             }
         }
