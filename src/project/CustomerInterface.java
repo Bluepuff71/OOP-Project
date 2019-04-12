@@ -48,7 +48,7 @@ public final class CustomerInterface {
                     login();
                     break;
                 case 2: //create account
-                    currentCustomer = createAccount("", "", "", "", "");
+                    currentCustomer = createAccount("", "", "", "", "", "", "");
                     //if the user didn't cancel account creation
                     if (currentCustomer != null) {
                         loginManager.addCustomerAccount(currentCustomer);
@@ -246,19 +246,19 @@ public final class CustomerInterface {
         selectItemInterface();
     }
 
-    //TODO format phone-number and credit card
-    //TODO sanatize inputs
     /**
      * Creates a new customer account and logs it in (Defaults should be "")
      *
-     * @param username    the default username
-     * @param plainText   the default plaintext password
-     * @param phoneNumber the default phone number
-     * @param address     the default address
-     * @param cardNumber  the default card number
+     * @param username             the default username
+     * @param plainText            the default plaintext password
+     * @param phoneNumber          the default phone number
+     * @param address              the default address
+     * @param cardNumber           the default card number
+     * @param formattedPhoneNumber the default formatted phone number
+     * @param formattedCardNumber  the default formatted card number
      * @return the new customer or null if the user backs out
      */
-    private Customer createAccount(String username, String plainText, String phoneNumber, String address, String cardNumber) {
+    private Customer createAccount(String username, String plainText, String phoneNumber, String address, String cardNumber, String formattedPhoneNumber, String formattedCardNumber) {
         String error;
         if (username.equals("") || plainText.equals("") || phoneNumber.equals("") || address.equals("") || cardNumber.equals("")) {
             error = "Error: One or more fields have not been completed.\n";
@@ -274,15 +274,17 @@ public final class CustomerInterface {
             error = "Error: That username is taken\n";
         } else if (username.contains(" ")) {
             error = "Error: Username contains invalid characters\n";
+        } else if (plainText.contains(" ")) {
+            error = "Error: Password contains invalid characters\n";
         } else {
             error = "";
         }
         System.out.println("---- New Customer Account ----");
         System.out.printf("[1] Username [%s]\n", username);
         System.out.printf("[2] Password [%s]\n", plainText);
-        System.out.printf("[3] Phone # [%s]\n", phoneNumber);
+        System.out.printf("[3] Phone # [%s]\n", formattedPhoneNumber);
         System.out.printf("[4] Address [%s]\n", address);
-        System.out.printf("[5] Card # [%s]\n", cardNumber);
+        System.out.printf("[5] Card # [%s]\n", formattedCardNumber);
         if (error.equals("")) {
             System.out.println("[6] Create Account");
         }
@@ -306,6 +308,10 @@ public final class CustomerInterface {
                     phoneNumber = Runner.scanner.nextLine();
                     phoneNumber = phoneNumber.replace(" ", "");
                     phoneNumber = phoneNumber.replace("-", "");
+                    for (int i = 0; i < 2; i++) {
+                        formattedPhoneNumber += phoneNumber.substring(i * 3, (i * 3) + 3) + "-";
+                    }
+                    formattedPhoneNumber += phoneNumber.substring(6);
                     break;
                 case 4:
                     System.out.print("Enter Address: ");
@@ -315,6 +321,10 @@ public final class CustomerInterface {
                     System.out.print("Enter Card Number: ");
                     cardNumber = Runner.scanner.nextLine();
                     cardNumber = cardNumber.replace(" ", "");
+                    for (int i = 0; i < 3; i++) {
+                        formattedCardNumber += cardNumber.substring(i * 4, (i * 4) + 4) + " ";
+                    }
+                    formattedCardNumber += cardNumber.substring(12);
                     break;
                 case 6:
                     if (error.equals("")) {
@@ -334,11 +344,12 @@ public final class CustomerInterface {
             System.out.println("That is not an option.\nPlease try again.");
             Runner.scanner.nextLine();
         }
-        return createAccount(username, plainText, phoneNumber, address, cardNumber);
+        return createAccount(username, plainText, phoneNumber, address, cardNumber, formattedPhoneNumber, formattedCardNumber);
     }
 
     /**
      * Prints a dialog with yes or no options
+     *
      * @param text the yes/no question to ask
      * @return true if yes, false if no
      */
@@ -484,6 +495,7 @@ public final class CustomerInterface {
         }
         System.out.println("----------------------------");
     }
+
     /**
      * Prints the customer's orders to the screen
      */
