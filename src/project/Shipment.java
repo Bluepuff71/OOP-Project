@@ -26,6 +26,6 @@ public final class Shipment implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return String.format("%s - $%.2f - %d Left", item.getName(), item.getPrice(), amount);
+        return String.format("%s - $%.2f", item.getName(), item.getPrice());
     }
 }
