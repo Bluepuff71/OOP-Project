@@ -169,9 +169,8 @@ public final class CustomerInterface {
      */
     private void checkOutInterface() {
         System.out.println("----------[ Checkout ]-----------");
-        editCartInterface();
-        System.out.println("---------------------------------");
-        System.out.printf("Total Cost: %.2f\n", currentCustomer.getCartTotalCost());
+        printCart();
+        System.out.printf("Total Cost: $%.2f\n", currentCustomer.getCartTotalCost());
         System.out.println("-----[ Payment ]-----");
         System.out.printf("Card #: XXXX XXXX XXXX %s\n", currentCustomer.getCard().getLastFourDigits());
         System.out.println("Confirm Payment? (Y,N) :");
@@ -181,6 +180,7 @@ public final class CustomerInterface {
                 try {
                     System.out.println("Verifying Payment Method...");
                     currentCustomer.addOrder(inventoryManager.createOrderRequest(currentCustomer));
+                    System.out.println("Payment Verified!");
                     break;
                 } catch (InvalidCardException e) {
                     System.out.println("Your card number is invalid.");
@@ -198,6 +198,7 @@ public final class CustomerInterface {
             //cancel
             System.out.println("Order Cancelled");
         }
+        System.out.println("---------------------------------");
     }
 
     /**
@@ -211,6 +212,7 @@ public final class CustomerInterface {
         int selectedItemID = Runner.scanner.nextInt();
         Runner.scanner.nextLine();
         if (selectedItemID == this.inventoryManager.getInventorySize() + 1) {
+            System.out.println("---------------------------------");
             return;
         }
         Shipment selectedShipment = this.inventoryManager.getShipmentFromInventory(selectedItemID - 1);
@@ -336,11 +338,7 @@ public final class CustomerInterface {
      */
     private void editCartInterface() {
         try {
-            System.out.println("----------[ Cart ]----------");
-            for (Shipment shipment : currentCustomer.getCart()) {
-                System.out.printf("%d %s - $%.2f\n", shipment.getAmount(), shipment.getItem().getName(), shipment.getItem().getPrice());
-            }
-            System.out.println("----------------------------");
+            printCart();
             System.out.println("Cart Options:");
             System.out.println("[1] Remove Item");
             System.out.println("[2] Go Back");
@@ -428,6 +426,13 @@ public final class CustomerInterface {
         removeFromCartInterface();
     }
 
+    private void printCart() {
+        System.out.println("----------[ Cart ]----------");
+        for (Shipment shipment : currentCustomer.getCart()) {
+            System.out.printf("%d %s - $%.2f\n", shipment.getAmount(), shipment.getItem().getName(), shipment.getItem().getPrice());
+        }
+        System.out.println("----------------------------");
+    }
     /**
      * Prints the customer's orders to the screen
      */
