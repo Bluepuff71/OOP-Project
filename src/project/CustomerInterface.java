@@ -188,7 +188,7 @@ public final class CustomerInterface {
                     System.out.println("There is not enough credit remaining on the specified card.");
                 }
                 if (yesNoDialog("Would you like to input a different card? (Y,N): ")) {
-                    System.out.print("Enter new Card Number: ");
+                    System.out.print("Enter new card number: ");
                     String cardNumber = Runner.scanner.nextLine();
                     currentCustomer.getCard().setNumber(cardNumber);
                 }
