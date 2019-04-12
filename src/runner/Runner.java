@@ -1,6 +1,7 @@
 package runner;
 
 import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import fileStuff.Serializer;
@@ -79,8 +80,9 @@ public class Runner {
                     default:
                         System.out.println("That is not an option.\nPlease try again");
                 }
-            } catch (Exception e) {
-                System.out.println("There was an error.\nPlease try again");
+            } catch (InputMismatchException e) {
+                System.out.println("That is not an option.\nPlease try again");
+                scanner.nextLine();
             }
         }
     }

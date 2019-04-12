@@ -68,6 +68,7 @@ public final class CustomerInterface {
             System.out.println("THIS ERROR SHOULDN'T BE POSSIBLE");
         } catch (InputMismatchException e) {
             System.out.println("That is not an option.\nPlease try again");
+            Runner.scanner.nextLine();
         }
         initialMenu();
     }
@@ -86,16 +87,14 @@ public final class CustomerInterface {
             mainInterface();
         } catch (NoAccountFoundException e) {
             System.out.println("Account doesn't exist");
-            System.out.println("Would you like to try again? (Y,N): ");
-            if (yesNoDialog()) {
+            if (yesNoDialog("Would you like to try again? (Y,N): ")) {
                 this.login();
             } else {
                 currentCustomer = null;
             }
         } catch (InvalidLoginException | InvalidAccountTypeException e) {
             System.out.println("That username/password combination is not correct.");
-            System.out.println("Would you like to try again? (Y,N): ");
-            if (yesNoDialog()) {
+            if (yesNoDialog("Would you like to try again? (Y,N): ")) {
                 this.login();
             } else {
                 currentCustomer = null;
@@ -160,10 +159,12 @@ public final class CustomerInterface {
             }
         } catch (InputMismatchException e) {
             System.out.println("That is not an option.\nPlease try again.");
+            Runner.scanner.nextLine();
         }
         mainInterface();
     }
 
+    //TODO empty cart when done checking out
     /**
      * The interface for doing checkout on a cart
      */
@@ -173,22 +174,20 @@ public final class CustomerInterface {
         System.out.printf("Total Cost: $%.2f\n", currentCustomer.getCartTotalCost());
         System.out.println("-----[ Payment ]-----");
         System.out.printf("Card #: XXXX XXXX XXXX %s\n", currentCustomer.getCard().getLastFourDigits());
-        System.out.println("Confirm Payment? (Y,N) :");
-        if (yesNoDialog()) {
+        if (yesNoDialog("Confirm Payment? (Y,N) : ")) {
             //confirm
             while (true) {
                 try {
                     System.out.println("Verifying Payment Method...");
                     currentCustomer.addOrder(inventoryManager.createOrderRequest(currentCustomer));
-                    System.out.println("Payment Verified!");
+                    System.out.println("Payment Completed");
                     break;
                 } catch (InvalidCardException e) {
                     System.out.println("Your card number is invalid.");
                 } catch (CreditLimitException e) {
                     System.out.println("There is not enough credit remaining on the specified card.");
                 }
-                System.out.print("Would you like to input a different card? (Y,N): ");
-                if (yesNoDialog()) {
+                if (yesNoDialog("Would you like to input a different card? (Y,N): ")) {
                     System.out.print("Enter new Card Number: ");
                     String cardNumber = Runner.scanner.nextLine();
                     currentCustomer.getCard().setNumber(cardNumber);
@@ -205,32 +204,50 @@ public final class CustomerInterface {
      * Interface for users to select items from the store
      */
     private void selectItemInterface() {
-        System.out.println("----------[ StoreFront ]----------");
-        System.out.print(this.inventoryManager.toString());
-        System.out.printf("[%d] Go Back\n", this.inventoryManager.getInventorySize() + 1);
-        System.out.print("Type the item you want to add to your cart: ");
-        int selectedItemID = Runner.scanner.nextInt();
-        Runner.scanner.nextLine();
-        if (selectedItemID == this.inventoryManager.getInventorySize() + 1) {
-            System.out.println("---------------------------------");
-            return;
-        }
-        Shipment selectedShipment = this.inventoryManager.getShipmentFromInventory(selectedItemID - 1);
-        int amount = 1;
-        do {
-            if (amount < 1) {
-                System.out.println("Amount to add must be greater than 0");
-            }
-            System.out.printf("-----[ Selected Item: %s ]-----\n", selectedShipment.getItem().getName());
-            System.out.print("How many would you like to add to your cart?: ");
-            amount = Runner.scanner.nextInt();
+        try {
+            System.out.println("----------[ StoreFront ]----------");
+            System.out.print(this.inventoryManager.toString());
+            System.out.println("----------------------------------");
+            System.out.printf("[%d] Go Back\n", this.inventoryManager.getInventorySize() + 1);
+            System.out.print("Please type your selection: ");
+            int selectedItemID = Runner.scanner.nextInt();
             Runner.scanner.nextLine();
-        } while (amount < 1);
-        currentCustomer.addToCart(selectedShipment.getItem(), amount);
-        System.out.printf("%d %s added to cart.\n", amount, selectedShipment.getItem().getName());
+            if (selectedItemID == this.inventoryManager.getInventorySize() + 1) {
+                System.out.println("----------------------------------");
+                return;
+            }
+            Shipment selectedShipment = this.inventoryManager.getShipmentFromInventory(selectedItemID - 1);
+            boolean amountSet = false;
+            int amount = 1;
+            do {
+                System.out.printf("-----[ Selected Item: %s ]-----\n", selectedShipment.getItem().getName());
+                System.out.print("How many would you like to add to your cart?: ");
+                try {
+                    amount = Runner.scanner.nextInt();
+                    Runner.scanner.nextLine();
+                    if (amount < 1) {
+                        System.out.println("Amount to add must be greater than 0");
+                    } else {
+                        amountSet = true;
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("That is not an option.");
+                    Runner.scanner.nextLine();
+                }
+            } while (amount < 1 || !amountSet);
+            currentCustomer.addToCart(selectedShipment.getItem(), amount);
+            System.out.printf("%d %s added to cart.\n", amount, selectedShipment.getItem().getName());
+        } catch (InputMismatchException e) {
+            System.out.println("That is not an option.\nPlease try again.");
+            Runner.scanner.nextLine();
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("That is not an option.\nPlease try again.");
+        }
         selectItemInterface();
     }
 
+    //TODO format phone-number and credit card
+    //TODO sanatize inputs
     /**
      * Creates a new customer account and logs it in (Defaults should be "")
      *
@@ -302,33 +319,39 @@ public final class CustomerInterface {
                 case 6:
                     if (error.equals("")) {
                         return new Customer(username, plainText, phoneNumber, address, new Card(cardNumber, 1000));
+                    } else {
+                        System.out.println("Account cannot be created while errors exist.");
+                        break;
                     }
+
                 case 7:
                     return null;
                 default:
                     System.out.println("That is not an option.\nPlease try again.");
                     break;
             }
-        } catch (Exception e) {
-            System.out.println("There was an error.\nPlease try again.");
+        } catch (InputMismatchException e) {
+            System.out.println("That is not an option.\nPlease try again.");
+            Runner.scanner.nextLine();
         }
         return createAccount(username, plainText, phoneNumber, address, cardNumber);
     }
 
     /**
      * Prints a dialog with yes or no options
-     *
+     * @param text the yes/no question to ask
      * @return true if yes, false if no
      */
-    private boolean yesNoDialog() {
+    private boolean yesNoDialog(String text) {
         while (true) {
+            System.out.print(text);
             String selection = Runner.scanner.nextLine();
             if (selection.toLowerCase().equals("y")) {
                 return true;
             } else if (selection.toLowerCase().equals("n")) {
                 return false;
             } else {
-                System.out.println("That is not an option\nPlease try again");
+                System.out.println("That is not an option");
             }
         }
     }
@@ -341,15 +364,23 @@ public final class CustomerInterface {
             printCart();
             System.out.println("Cart Options:");
             System.out.println("[1] Remove Item");
-            System.out.println("[2] Go Back");
+            System.out.println("[2] Empty Cart");
+            System.out.println("[3] Go Back");
             System.out.println("Please choose an option: ");
             int selection = Runner.scanner.nextInt();
             Runner.scanner.nextLine();
             switch (selection) {
                 case 1:
                     removeFromCartInterface();
+                    if (currentCustomer.getCart().isEmpty()) {
+                        System.out.println("The cart is now empty returning to menu");
+                        return;
+                    }
                     break;
                 case 2:
+                    currentCustomer.getCart().clear();
+                    return;
+                case 3:
                     return;
                 default:
                     System.out.println("That is not an option.\nPlease try again.");
@@ -357,10 +388,14 @@ public final class CustomerInterface {
             }
         } catch (InputMismatchException e) {
             System.out.println("That is not an option.\nPlease try again.");
+            Runner.scanner.nextLine();
         }
         editCartInterface();
     }
 
+    /**
+     * Interface for removing from the cart
+     */
     private void removeFromCartInterface() {
         System.out.println("----[ Remove From Cart ]----");
         int i = 1;
@@ -381,51 +416,67 @@ public final class CustomerInterface {
                     System.out.println("[1] Remove Amount");
                     System.out.println("[2] Remove All");
                     System.out.println("[3] Go Back");
-                    int choice = Runner.scanner.nextInt();
-                    Runner.scanner.nextLine();
-                    switch (choice) {
-                        case 1:
-                            while (true) {
-                                try {
-                                    System.out.printf("-----[ Selected Item: %s - Amount: %d ]-----\n", selectedCartItem.getItem().getName(), selectedCartItem.getAmount());
-                                    System.out.print("How many would you like to remove: ");
-                                    int amountToRemove = Runner.scanner.nextInt();
-                                    Runner.scanner.nextLine();
-                                    if (amountToRemove < 1) {
-                                        System.out.println("The amount to remove must be greater than 0.\nPlease try again.");
-                                    } else if (amountToRemove > selectedCartItem.getAmount()) {
-                                        System.out.println("The amount to remove can't be larger than the amount in the cart.\nPlease try again.");
-                                    } else {
-                                        System.out.printf("%d %s removed from cart\n", amountToRemove, selectedCartItem.getItem().getName());
-                                        currentCustomer.removeFromCart(selectedCartItem.getItem(), amountToRemove);
-                                        break;
+                    try {
+                        int choice = Runner.scanner.nextInt();
+                        Runner.scanner.nextLine();
+                        switch (choice) {
+                            case 1:
+                                while (true) {
+                                    try {
+                                        System.out.printf("-----[ Selected Item: %s - Amount: %d ]-----\n", selectedCartItem.getItem().getName(), selectedCartItem.getAmount());
+                                        System.out.print("How many would you like to remove: ");
+                                        int amountToRemove = Runner.scanner.nextInt();
+                                        Runner.scanner.nextLine();
+                                        if (amountToRemove < 1) {
+                                            System.out.println("The amount to remove must be greater than 0.\nPlease try again.");
+                                        } else if (amountToRemove > selectedCartItem.getAmount()) {
+                                            System.out.println("The amount to remove can't be larger than the amount in the cart.\nPlease try again.");
+                                        } else {
+                                            System.out.printf("%d %s removed from cart\n", amountToRemove, selectedCartItem.getItem().getName());
+                                            currentCustomer.removeFromCart(selectedCartItem.getItem(), amountToRemove);
+                                            break;
+                                        }
+                                    } catch (InputMismatchException e) {
+                                        System.out.println("That is not a valid amount.\nPlease try again.");
+                                        Runner.scanner.nextLine();
                                     }
-                                } catch (InputMismatchException e) {
-                                    System.out.println("That is not a valid amount.\nPlease try again.");
                                 }
-                            }
-                            break;
-                        case 2:
-                            System.out.printf("%s removed from cart\n", selectedCartItem.getItem().getName());
-                            currentCustomer.removeFromCart(selectedCartItem.getItem());
-                            break;
-                        case 3:
-                            break;
-                        default:
-                            System.out.println("That is not an option.\nPlease try again.");
-                            continue;
+                                break;
+                            case 2:
+                                System.out.printf("%s removed from cart\n", selectedCartItem.getItem().getName());
+                                currentCustomer.removeFromCart(selectedCartItem.getItem());
+                                break;
+                            case 3:
+                                break;
+                            default:
+                                System.out.println("That is not an option.\nPlease try again.");
+                                continue;
+                        }
+                    } catch (InputMismatchException e) {
+                        System.out.println("That is not an option.\nPlease try again.");
+                        Runner.scanner.nextLine();
+                        continue;
                     }
                     break;
+                }
+                if (currentCustomer.getCart().isEmpty()) {
+                    return;
                 }
             } else {
                 return;
             }
         } catch (InputMismatchException e) {
             System.out.println("That is not an option.\nPlease try again.");
+            Runner.scanner.nextLine();
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("That is not an option.\nPlease try again.");
         }
         removeFromCartInterface();
     }
 
+    /**
+     * Prints the cart to the screen
+     */
     private void printCart() {
         System.out.println("----------[ Cart ]----------");
         for (Shipment shipment : currentCustomer.getCart()) {
@@ -456,13 +507,14 @@ public final class CustomerInterface {
                 } else {
                     i = 1;
                     System.out.printf("----------[ Order %d ]----------\n", selection);
-                    Order selectedOrder = currentCustomer.getOrders().get(selection);
+                    Order selectedOrder = currentCustomer.getOrders().get(selection - 1);
                     for (Shipment shipment : selectedOrder.getOrderedItems()) {
                         System.out.printf("Item %d: %s - Amount: %d\n", i, shipment.getItem().getName(), shipment.getAmount());
+                        i++;
                     }
-                    System.out.printf("\nOrder Status: %s", selectedOrder.getOrderStatus().toString());
+                    System.out.printf("\nOrder Status: %s\n", selectedOrder.getOrderStatus().toString());
                     System.out.println("--------------------------------");
-                    System.out.print("Press enter when you are done viewing.");
+                    System.out.println("Press enter when you are done viewing.");
                     Runner.scanner.nextLine();
                 }
             } else {
