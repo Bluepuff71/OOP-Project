@@ -1,13 +1,13 @@
-package Project;
+package project;
 
-import Security.Hash;
+import security.Hash;
 
 import java.util.Arrays;
 
 /**
  * The general base class for all accounts
  */
-public abstract class Account {
+public abstract class Account implements java.io.Serializable {
 
     /**
      * The username of the account holder.

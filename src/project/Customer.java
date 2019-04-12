@@ -1,11 +1,11 @@
-package Project;
+package project;
 
 import java.util.ArrayList;
 
 /**
  * A customer account for standard clients
  */
-public class Customer extends Account implements java.io.Serializable {
+public final class Customer extends Account implements java.io.Serializable {
 
     /**
      * The debit/credit card information for the customer
@@ -28,18 +28,9 @@ public class Customer extends Account implements java.io.Serializable {
     private ArrayList<Shipment> cart;
 
     /**
-     * Creates a new customer account with only a username and password
-     *
-     * @param username
-     * @param plainText
+     * The orders that the customer has created
      */
-    public Customer(String username, String plainText) {
-        super(username, plainText);
-        this.phoneNumber = null;
-        this.address = null;
-        this.card = null;
-        this.cart = null;
-    }
+    private ArrayList<Order> orders;
 
     /**
      * Creates a new customer account with an empty cart
@@ -55,7 +46,8 @@ public class Customer extends Account implements java.io.Serializable {
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.card = card;
-        this.cart = null;
+        this.cart = new ArrayList<>();
+        this.orders = new ArrayList<>();
     }
 
     public Card getCard() {
@@ -67,12 +59,18 @@ public class Customer extends Account implements java.io.Serializable {
     }
 
     /**
-     * Adds an item to the cart
+     * Adds an item to the cart (additive)
      *
      * @param item   the item to add
      * @param amount the amount to add
      */
     public void addToCart(Item item, int amount) {
+        for (Shipment shipment : cart) {
+            if (shipment.getItem().getName().equals(item.getName())) {
+                shipment.setAmount(shipment.getAmount() + amount);
+                return;
+            }
+        }
         cart.add(new Shipment(item, amount));
     }
 
@@ -83,7 +81,7 @@ public class Customer extends Account implements java.io.Serializable {
      */
     public void removeFromCart(Item item) {
         for (Shipment shipment : cart) {
-            if (shipment.getItem().equals(item)) {
+            if (shipment.getItem().getName().equals(item.getName())) {
                 cart.remove(shipment);
                 break;
             }
@@ -97,12 +95,12 @@ public class Customer extends Account implements java.io.Serializable {
      * @param amount the amount to remove
      */
     public void removeFromCart(Item item, int amount) {
-        for (Shipment shipment : cart) {
-            if (shipment.getItem().equals(item)) {
-                if (shipment.getAmount() <= amount) {
-                    cart.remove(shipment);
+        for (Shipment cartItem : cart) {
+            if (cartItem.getItem().getName().equals(item.getName())) {
+                if (cartItem.getAmount() <= amount) {
+                    cart.remove(cartItem);
                 } else {
-                    shipment.setAmount(shipment.getAmount() - amount);
+                    cartItem.setAmount(cartItem.getAmount() - amount);
                 }
                 break;
             }
@@ -119,5 +117,27 @@ public class Customer extends Account implements java.io.Serializable {
             totalCost += (shipment.getItem().getPrice() * shipment.getAmount());
         }
         return totalCost;
+    }
+
+    public ArrayList<Order> getOrders() {
+        return orders;
+    }
+
+    /**
+     * Adds an order to the customer's order list
+     *
+     * @param order the order to add
+     */
+    public void addOrder(Order order) {
+        this.orders.add(order);
+    }
+
+    /**
+     * Removes an order from the customer's order list
+     *
+     * @param order the order to remove
+     */
+    public void removeOrder(Order order) {
+        this.orders.remove(order);
     }
 }

@@ -1,9 +1,9 @@
-package Project;
+package project;
 
 /**
  * An item is an entity that is sold in the store
  */
-public class Item implements java.io.Serializable {
+public final class Item implements java.io.Serializable {
 
     /**
      * The item's name
@@ -27,26 +27,16 @@ public class Item implements java.io.Serializable {
         this.price = price;
     }
 
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public double getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    //TODO setup proper toString to help whoever is doing interfaces
     @Override
     public String toString() {
-        return "";
+        return String.format("%s - %.2f", this.name, this.price);
     }
 }

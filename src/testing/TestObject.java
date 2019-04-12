@@ -1,6 +1,6 @@
-package Testing;
+package testing;
 
-import Security.Hash;
+import security.Hash;
 
 import java.util.ArrayList;
 import java.util.Arrays;
