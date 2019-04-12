@@ -521,6 +521,7 @@ public final class CustomerInterface {
 
             } catch (InputMismatchException e) {
                 System.out.println("That is not an option");
+                Runner.scanner.nextLine();
             }
         }
     }
