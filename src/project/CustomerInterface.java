@@ -164,7 +164,6 @@ public final class CustomerInterface {
         mainInterface();
     }
 
-    //TODO empty cart when done checking out
     /**
      * The interface for doing checkout on a cart
      */
@@ -181,6 +180,7 @@ public final class CustomerInterface {
                     System.out.println("Verifying Payment Method...");
                     currentCustomer.addOrder(inventoryManager.createOrderRequest(currentCustomer));
                     System.out.println("Payment Completed");
+                    currentCustomer.getCart().clear();
                     break;
                 } catch (InvalidCardException e) {
                     System.out.println("Your card number is invalid.");
