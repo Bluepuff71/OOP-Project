@@ -27,7 +27,6 @@ public final class Item implements java.io.Serializable {
         this.price = price;
     }
 
-
     public String getName() {
         return name;
     }
