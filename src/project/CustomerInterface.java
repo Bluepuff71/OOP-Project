@@ -262,20 +262,20 @@ public final class CustomerInterface {
         String error;
         if (username.equals("") || plainText.equals("") || phoneNumber.equals("") || address.equals("") || cardNumber.equals("")) {
             error = "Error: One or more fields have not been completed.\n";
-        } else if (cardNumber.length() != 16) {
-            error = "Error: Card number must be exactly 16 numbers long\n";
-        } else if (cardNumber.matches("[^0-9]")) {
-            error = "Error: Card number may only contain numbers\n";
-        } else if (phoneNumber.length() != 10) {
-            error = "Error: Phone numbers can only be 10 characters long.\n";
-        } else if (phoneNumber.matches("[^0-9]")) {
-            error = "Error: Phone number may only contain numbers\n";
         } else if (loginManager.usernameTaken(username)) {
             error = "Error: That username is taken\n";
         } else if (username.contains(" ")) {
             error = "Error: Username contains invalid characters\n";
         } else if (plainText.contains(" ")) {
             error = "Error: Password contains invalid characters\n";
+        } else if (phoneNumber.matches(".*\\D.*")) {
+            error = "Error: Phone number may only contain numbers\n";
+        } else if (phoneNumber.length() != 10) {
+            error = "Error: Phone numbers can only be 10 characters long.\n";
+        } else if (cardNumber.matches(".*\\D.*")) {
+            error = "Error: Card number may only contain numbers\n";
+        } else if (cardNumber.length() != 16) {
+            error = "Error: Card number must be exactly 16 numbers long\n";
         } else {
             error = "";
         }
@@ -306,13 +306,19 @@ public final class CustomerInterface {
                 case 3:
                     System.out.print("Enter Phone #: ");
                     phoneNumber = Runner.scanner.nextLine();
-                    phoneNumber = phoneNumber.replace(" ", "");
-                    phoneNumber = phoneNumber.replace("-", "");
-                    for (int i = 0; i < 2; i++) {
-                        formattedPhoneNumber += phoneNumber.substring(i * 3, (i * 3) + 3) + "-";
+                    if (phoneNumber.length() != 10) {
+                        formattedPhoneNumber = phoneNumber;
+                        break;
+                    } else {
+                        formattedPhoneNumber = "";
+                        phoneNumber = phoneNumber.replace(" ", "");
+                        phoneNumber = phoneNumber.replace("-", "");
+                        for (int i = 0; i < 2; i++) {
+                            formattedPhoneNumber += phoneNumber.substring(i * 3, (i * 3) + 3) + "-";
+                        }
+                        formattedPhoneNumber += phoneNumber.substring(6);
+                        break;
                     }
-                    formattedPhoneNumber += phoneNumber.substring(6);
-                    break;
                 case 4:
                     System.out.print("Enter Address: ");
                     address = Runner.scanner.nextLine();
@@ -320,12 +326,18 @@ public final class CustomerInterface {
                 case 5:
                     System.out.print("Enter Card Number: ");
                     cardNumber = Runner.scanner.nextLine();
-                    cardNumber = cardNumber.replace(" ", "");
-                    for (int i = 0; i < 3; i++) {
-                        formattedCardNumber += cardNumber.substring(i * 4, (i * 4) + 4) + " ";
+                    if (cardNumber.length() != 16) {
+                        formattedCardNumber = cardNumber;
+                        break;
+                    } else {
+                        formattedCardNumber = "";
+                        cardNumber = cardNumber.replace(" ", "");
+                        for (int i = 0; i < 3; i++) {
+                            formattedCardNumber += cardNumber.substring(i * 4, (i * 4) + 4) + " ";
+                        }
+                        formattedCardNumber += cardNumber.substring(12);
+                        break;
                     }
-                    formattedCardNumber += cardNumber.substring(12);
-                    break;
                 case 6:
                     if (error.equals("")) {
                         return new Customer(username, plainText, phoneNumber, address, new Card(cardNumber, 1000));
