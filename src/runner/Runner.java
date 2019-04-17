@@ -70,7 +70,7 @@ public class Runner {
                         new CustomerInterface(loginManager, inventoryManager).initialMenu();
                         break;
                     case 2: //supplier interface
-                        System.out.println("This isn't ready yet.");
+                        new SupplierInterface(loginManager);
                         break;
                     case 3:
                         Serializer.writeObject(inventoryManager, "Inventory.dat");
@@ -86,4 +86,6 @@ public class Runner {
             }
         }
     }
+
+
 }
