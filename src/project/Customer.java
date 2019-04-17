@@ -130,6 +130,7 @@ public final class Customer extends Account implements java.io.Serializable {
      */
     public void addOrder(Order order) {
         this.orders.add(order);
+        Supplier.addToDeliveryOrderList(order);
     }
 
     /**

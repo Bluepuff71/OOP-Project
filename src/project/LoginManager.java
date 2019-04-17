@@ -30,7 +30,7 @@ public final class LoginManager implements java.io.Serializable {
     /**
      * Adds a new customer account to the account list
      *
-     * @param customer the customer to add
+     * @param account the account to add
      * @throws UsernameTakenException if the username is already taken
      */
     public final <T extends Account> void addAccount(T account) throws UsernameTakenException {

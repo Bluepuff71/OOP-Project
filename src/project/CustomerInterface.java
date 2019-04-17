@@ -4,7 +4,7 @@ import runner.Runner;
 
 import java.util.InputMismatchException;
 
-public final class CustomerInterface extends StandardInterface {
+public final class CustomerInterface extends BasicInterface {
 
     //TODO add lambda functions for any search
     /**

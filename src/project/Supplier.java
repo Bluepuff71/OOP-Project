@@ -23,7 +23,7 @@ public final class Supplier extends Account implements java.io.Serializable {
      * Adds an order to the order list
      * @param order the order to add
      */
-    public void addToDeliveryOrderList(Order order) {
+    public static void addToDeliveryOrderList(Order order) {
         deliveryOrderList.add(order);
     }
 
@@ -31,7 +31,7 @@ public final class Supplier extends Account implements java.io.Serializable {
      * Removes an order from the order list
      * @param order the order to remove
      */
-    public void removeFromDeliveryOrderList(Order order) {
+    public static void removeFromDeliveryOrderList(Order order) {
         deliveryOrderList.remove(order);
     }
 
@@ -39,10 +39,11 @@ public final class Supplier extends Account implements java.io.Serializable {
      * Gets the order list
      * @return the order list
      */
-    public ArrayList<Order> getDeliveryOrderList() {
+    public static ArrayList<Order> getDeliveryOrderList() {
         return deliveryOrderList;
     }
 
+    //TODO do something with this
     /*public void processDeliveryOrder(Order order, Storefront storefront){
 
         for(Shipment shipment : order.getOrderedItems()){

@@ -4,13 +4,13 @@ import runner.Runner;
 
 import java.util.InputMismatchException;
 
-public abstract class StandardInterface {
+public abstract class BasicInterface {
 
     protected Account currentAccount;
 
     protected LoginManager loginManager;
 
-    public StandardInterface(LoginManager loginManager) {
+    public BasicInterface(LoginManager loginManager) {
         this.loginManager = loginManager;
     }
 
