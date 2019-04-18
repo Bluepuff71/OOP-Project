@@ -420,12 +420,7 @@ public final class CustomerInterface extends BasicInterface {
                 } else {
                     i = 1;
                     System.out.printf("----------[ Order %d ]----------\n", selection);
-                    Order selectedOrder = currentCustomer.getOrders().get(selection - 1);
-                    for (Shipment shipment : selectedOrder.getOrderedItems()) {
-                        System.out.printf("Item %d: %s - Amount: %d\n", i, shipment.getItem().getName(), shipment.getAmount());
-                        i++;
-                    }
-                    System.out.printf("\nOrder Status: %s\n", selectedOrder.getOrderStatus().toString());
+                    System.out.println(currentCustomer.getOrders().get(selection - 1));
                     System.out.println("--------------------------------");
                     System.out.println("Press enter when you are done viewing.");
                     Runner.scanner.nextLine();
