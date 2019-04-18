@@ -37,7 +37,7 @@ public final class SupplierInterface extends BasicInterface {
                     inventoryOrderInterface();
                     break;
                 case 4:
-                    if (!Supplier.getInventoryOrderList().isEmpty()) {
+                    if (!currentSupplier.getInventoryOrderList().isEmpty()) {
                         System.out.println("----------[ All Orders ]----------");
                         if (!getOrdersByStatus(Order.OrderStatus.Ordered).isEmpty()) {
                             System.out.println("------[Status: Ordered]------");
@@ -161,7 +161,7 @@ public final class SupplierInterface extends BasicInterface {
                                         //if the item is not in stock
                                         if (!inventoryManager.itemInStock(shipment.getItem(), shipment.getAmount())) {
                                             ordersRequired.append(String.format("Name: %s - Amount Requested: %d\n", shipment.getItem().getName(), shipment.getAmount()));
-                                            Supplier.addToInventoryOrderList(shipment);
+                                            currentSupplier.addToInventoryOrderList(shipment);
                                         }
                                     }
                                     //If an inventory order is required
@@ -179,7 +179,7 @@ public final class SupplierInterface extends BasicInterface {
                                         selectedOrder.setOrderStatus(Order.OrderStatus.Ready);
                                         System.out.println("Inventory reserved successfully!");
                                         // No orders left
-                                        if (Supplier.getDeliveryOrderList().isEmpty()) {
+                                        if (currentSupplier.getDeliveryOrderList().isEmpty()) {
                                             return; //Go back to the main menu
                                         } else {
                                             break; //Go back
@@ -210,7 +210,7 @@ public final class SupplierInterface extends BasicInterface {
 
     private List<Order> getOrdersByStatus(Order.OrderStatus requestedStatus) {
         //Super fancy lambda function
-        return Supplier.getDeliveryOrderList().stream().filter(
+        return currentSupplier.getDeliveryOrderList().stream().filter(
                 order -> order.getOrderStatus() == requestedStatus
         ).collect(Collectors.toList());
     }
@@ -284,13 +284,13 @@ public final class SupplierInterface extends BasicInterface {
 
     private void inventoryOrderInterface() {
         while (true) {
-            if (Supplier.getInventoryOrderList().isEmpty()) {
+            if (currentSupplier.getInventoryOrderList().isEmpty()) {
                 System.out.println("-----[ Inventory Order ]-----");
                 System.out.println("[1] Create Custom Order");
                 System.out.println("[2] Go Back");
             } else {
                 System.out.println("-----[ Auto-Generated Order ]-----");
-                Supplier.getInventoryOrderList().forEach(shipment -> System.out.printf("Name: %s - Amount Needed: %d\n", shipment.getItem().getName(), shipment.getAmount()));
+                currentSupplier.getInventoryOrderList().forEach(shipment -> System.out.printf("Name: %s - Amount Needed: %d\n", shipment.getItem().getName(), shipment.getAmount()));
                 System.out.println("---------------------------");
                 System.out.println("[1] Request Auto-Generated Order");
                 System.out.println("[2] Create Custom Order");
@@ -299,17 +299,17 @@ public final class SupplierInterface extends BasicInterface {
             System.out.print("Please choose an option: ");
             int selection = Runner.scanner.nextInt();
             Runner.scanner.nextLine();
-            if (Supplier.getInventoryOrderList().isEmpty()) {
+            if (currentSupplier.getInventoryOrderList().isEmpty()) {
                 selection++;
             }
-            if (Supplier.getInventoryOrderList().isEmpty() && selection == 1) {
+            if (currentSupplier.getInventoryOrderList().isEmpty() && selection == 1) {
                 System.out.println("That is not an option");
                 continue;
             }
             try {
                 switch (selection) {
                     case 1:
-                        Supplier.getInventoryOrderList().forEach(shipment -> inventoryManager.createInventoryOrder(shipment.getItem(), shipment.getAmount()));
+                        currentSupplier.getInventoryOrderList().forEach(shipment -> inventoryManager.createInventoryOrder(shipment.getItem(), shipment.getAmount()));
                         System.out.println("Inventory order requested!");
                         continue;
                     case 2:

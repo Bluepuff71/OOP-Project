@@ -9,9 +9,9 @@ public final class Supplier extends Account implements java.io.Serializable {
     /**
      * The list of orders that have been created
      */
-    private static List<Order> deliveryOrderList = new ArrayList<>();
+    private List<Order> deliveryOrderList = new ArrayList<>();
 
-    private static List<Shipment> inventoryOrderList = new ArrayList<>();
+    private List<Shipment> inventoryOrderList = new ArrayList<>();
 
     /**
      * Creates a supplier account with an empty order list
@@ -27,15 +27,15 @@ public final class Supplier extends Account implements java.io.Serializable {
      * Gets the order list
      * @return the order list
      */
-    public static List<Order> getDeliveryOrderList() {
+    public List<Order> getDeliveryOrderList() {
         return deliveryOrderList;
     }
 
-    public static List<Shipment> getInventoryOrderList() {
+    public List<Shipment> getInventoryOrderList() {
         return inventoryOrderList;
     }
 
-    public static void addToInventoryOrderList(Shipment shipment) {
+    public void addToInventoryOrderList(Shipment shipment) {
         for (Shipment selectedShipment : inventoryOrderList) {
             if (selectedShipment.getItem() == shipment.getItem()) {
                 selectedShipment.setAmount(selectedShipment.getAmount() + shipment.getAmount());
