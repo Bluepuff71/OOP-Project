@@ -7,17 +7,13 @@ import java.util.InputMismatchException;
 public final class CustomerInterface extends BasicInterface {
 
     //TODO add lambda functions for any search
-    /**
-     * The storefront that the customer will browse
-     */
-    private InventoryManager inventoryManager;
+
 
     private Customer currentCustomer;
 
 
     public CustomerInterface(LoginManager loginManager, InventoryManager inventoryManager) {
-        super(loginManager);
-        this.inventoryManager = inventoryManager;
+        super(loginManager, inventoryManager);
         this.currentCustomer = (Customer) super.currentAccount;
     }
 
@@ -418,7 +414,6 @@ public final class CustomerInterface extends BasicInterface {
                 } else if (selection > i || selection < 1) {
                     System.out.println("That is not an option");
                 } else {
-                    i = 1;
                     System.out.printf("----------[ Order %d ]----------\n", selection);
                     System.out.println(currentCustomer.getOrders().get(selection - 1));
                     System.out.println("--------------------------------");

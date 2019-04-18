@@ -5,10 +5,13 @@ import java.util.List;
 
 public final class Supplier extends Account implements java.io.Serializable {
 
+    //TODO fix the static fields so they will be serialized
     /**
      * The list of orders that have been created
      */
     private static List<Order> deliveryOrderList = new ArrayList<>();
+
+    private static List<Shipment> inventoryOrderList = new ArrayList<>();
 
     /**
      * Creates a supplier account with an empty order list
@@ -21,22 +24,6 @@ public final class Supplier extends Account implements java.io.Serializable {
     }
 
     /**
-     * Adds an order to the order list
-     * @param order the order to add
-     */
-    public static void addToDeliveryOrderList(Order order) {
-        deliveryOrderList.add(order);
-    }
-
-    /**
-     * Removes an order from the order list
-     * @param order the order to remove
-     */
-    public static void removeFromDeliveryOrderList(Order order) {
-        deliveryOrderList.remove(order);
-    }
-
-    /**
      * Gets the order list
      * @return the order list
      */
@@ -44,4 +31,17 @@ public final class Supplier extends Account implements java.io.Serializable {
         return deliveryOrderList;
     }
 
+    public static List<Shipment> getInventoryOrderList() {
+        return inventoryOrderList;
+    }
+
+    public static void addToInventoryOrderList(Shipment shipment) {
+        for (Shipment selectedShipment : inventoryOrderList) {
+            if (selectedShipment.getItem() == shipment.getItem()) {
+                selectedShipment.setAmount(selectedShipment.getAmount() + shipment.getAmount());
+                return;
+            }
+        }
+        inventoryOrderList.add(shipment);
+    }
 }

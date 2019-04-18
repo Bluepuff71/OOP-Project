@@ -10,8 +10,14 @@ public abstract class BasicInterface {
 
     protected LoginManager loginManager;
 
-    public BasicInterface(LoginManager loginManager) {
+    /**
+     * The storefront that the customer will browse
+     */
+    protected InventoryManager inventoryManager;
+
+    public BasicInterface(LoginManager loginManager, InventoryManager inventoryManager) {
         this.loginManager = loginManager;
+        this.inventoryManager = inventoryManager;
     }
 
     protected void login() {

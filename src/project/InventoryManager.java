@@ -50,7 +50,7 @@ public class InventoryManager implements java.io.Serializable {
      */
     public Shipment getShipmentFromInventory(Item item) throws ItemNotFoundException, NullPointerException {
         for (Shipment shipment : inventory) {
-            if (shipment.getItem().equals(item)) {
+            if (shipment.getItem().getName().equals(item.getName())) {
                 return shipment;
             }
         }
