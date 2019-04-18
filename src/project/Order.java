@@ -69,4 +69,16 @@ public final class Order implements java.io.Serializable {
     public void setOrderStatus(OrderStatus orderStatus) {
         this.orderStatus = orderStatus;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder output = new StringBuilder();
+        int i = 1;
+        for (Shipment shipment : this.getOrderedItems()) {
+            output.append(String.format("Item %d: %s - Amount: %d\n", i, shipment.getItem().getName(), shipment.getAmount()));
+            i++;
+        }
+        output.append(String.format("\nOrder Status: %s", this.getOrderStatus().toString()));
+        return output.toString();
+    }
 }
