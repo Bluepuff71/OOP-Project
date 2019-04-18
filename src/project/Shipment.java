@@ -6,7 +6,6 @@ public final class Shipment implements java.io.Serializable {
 
     private int amount;
 
-
     public Shipment(Item item, int amount) {
         this.item = item;
         this.amount = amount;
