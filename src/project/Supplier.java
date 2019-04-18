@@ -1,13 +1,14 @@
 package project;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public final class Supplier extends Account implements java.io.Serializable {
 
     /**
      * The list of orders that have been created
      */
-    private static ArrayList<Order> deliveryOrderList = new ArrayList<>();
+    private static List<Order> deliveryOrderList = new ArrayList<>();
 
     /**
      * Creates a supplier account with an empty order list
@@ -39,21 +40,8 @@ public final class Supplier extends Account implements java.io.Serializable {
      * Gets the order list
      * @return the order list
      */
-    public static ArrayList<Order> getDeliveryOrderList() {
+    public static List<Order> getDeliveryOrderList() {
         return deliveryOrderList;
     }
 
-    //TODO do something with this
-    /*public void processDeliveryOrder(Order order, Storefront storefront){
-
-        for(Shipment shipment : order.getOrderedItems()){
-            if(storefront.itemInStock(shipment.getItem(), shipment.getAmount())){
-
-            } else{
-                throw new OutOfStockException();
-            }
-
-
-        }
-    }*/
 }

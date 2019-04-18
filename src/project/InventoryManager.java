@@ -1,13 +1,14 @@
 package project;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class InventoryManager implements java.io.Serializable {
 
     /**
      * The inventory of the storefront
      */
-    private ArrayList<Shipment> inventory;
+    private List<Shipment> inventory;
 
     public InventoryManager() {
         inventory = new ArrayList<>();

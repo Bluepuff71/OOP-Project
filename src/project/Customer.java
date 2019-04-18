@@ -1,6 +1,7 @@
 package project;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A customer account for standard clients
@@ -25,12 +26,12 @@ public final class Customer extends Account implements java.io.Serializable {
     /**
      * The cart of items the user has selected
      */
-    private ArrayList<Shipment> cart;
+    private List<Shipment> cart;
 
     /**
      * The orders that the customer has created
      */
-    private ArrayList<Order> orders;
+    private List<Order> orders;
 
     /**
      * Creates a new customer account with an empty cart
@@ -54,7 +55,7 @@ public final class Customer extends Account implements java.io.Serializable {
         return card;
     }
 
-    public ArrayList<Shipment> getCart() {
+    public List<Shipment> getCart() {
         return cart;
     }
 
@@ -119,7 +120,7 @@ public final class Customer extends Account implements java.io.Serializable {
         return totalCost;
     }
 
-    public ArrayList<Order> getOrders() {
+    public List<Order> getOrders() {
         return orders;
     }
 
