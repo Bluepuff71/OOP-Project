@@ -425,7 +425,6 @@ public final class CustomerInterface extends BasicInterface {
                     System.out.println("Press enter when you are done viewing.");
                     Runner.scanner.nextLine();
                 }
-
             } catch (InputMismatchException e) {
                 System.out.println("That is not an option");
                 Runner.scanner.nextLine();
