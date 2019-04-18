@@ -70,7 +70,7 @@ public class Runner {
                         new CustomerInterface(loginManager, inventoryManager).initialMenu();
                         break;
                     case 2: //supplier interface
-                        new SupplierInterface(loginManager);
+                        new SupplierInterface(loginManager, inventoryManager).initialMenu();
                         break;
                     case 3:
                         Serializer.writeObject(inventoryManager, "Inventory.dat");

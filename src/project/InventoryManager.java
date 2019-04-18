@@ -84,16 +84,19 @@ public class InventoryManager implements java.io.Serializable {
 
 
     /**
-     * Removes the specified amount of an item from the inventory
+     * Removes the specified amount of an item from the inventory (removes the item from the inventory if needed)
      *
      * @param item   the item to remove
      * @param amount the amount to remove
      * @throws OutOfStockException if there are not enough items to remove
+     * @throws ItemNotFoundException if the item isn't found in the inventory
      */
     public void removeFromInventory(Item item, int amount) throws OutOfStockException, ItemNotFoundException {
         Shipment selectedShipment = getShipmentFromInventory(item);
-        if (selectedShipment.getAmount() >= amount) {
+        if (selectedShipment.getAmount() > amount) {
             selectedShipment.setAmount(selectedShipment.getAmount() - amount);
+        } else if (selectedShipment.getAmount() == amount) {
+            inventory.remove(selectedShipment);
         } else {
             throw new OutOfStockException(item);
         }
