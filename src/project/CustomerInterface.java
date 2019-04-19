@@ -12,11 +12,14 @@ public final class CustomerInterface extends BasicInterface {
         super(loginManager, inventoryManager);
     }
 
+    private Customer currentCustomer;
+
     /**
      * The main menu of the customer interface
      */
     @Override
     public void mainInterface() {
+        currentCustomer = (Customer) loginManager.getCurrentUser();
         try {
             System.out.println("What would you like to do?");
             System.out.println("[1] Browse Catalog");
@@ -36,21 +39,21 @@ public final class CustomerInterface extends BasicInterface {
                     }
                     break;
                 case 2:
-                    if (((Customer) loginManager.getCurrentUser()).getCart().isEmpty()) {
+                    if (currentCustomer.getCart().isEmpty()) {
                         System.out.println("Your cart is empty.");
                     } else {
                         checkOutInterface();
                     }
                     break;
                 case 3:
-                    if (((Customer) loginManager.getCurrentUser()).getCart().isEmpty()) {
+                    if (currentCustomer.getCart().isEmpty()) {
                         System.out.println("Your cart is empty.");
                     } else {
                         editCartInterface();
                     }
                     break;
                 case 4:
-                    if (((Customer) loginManager.getCurrentUser()).getOrders().isEmpty()) {
+                    if (currentCustomer.getOrders().isEmpty()) {
                         System.out.println("You have not placed any orders.");
                     } else {
                         ordersInterface();
@@ -77,17 +80,17 @@ public final class CustomerInterface extends BasicInterface {
     private void checkOutInterface() {
         System.out.println("----------[ Checkout ]-----------");
         printCart();
-        System.out.printf("Total Cost: $%.2f\n", ((Customer) loginManager.getCurrentUser()).getCartTotalCost());
+        System.out.printf("Total Cost: $%.2f\n", currentCustomer.getCartTotalCost());
         System.out.println("-----[ Payment ]-----");
-        System.out.printf("Card #: XXXX XXXX XXXX %s\n", ((Customer) loginManager.getCurrentUser()).getCard().getLastFourDigits());
+        System.out.printf("Card #: XXXX XXXX XXXX %s\n", currentCustomer.getCard().getLastFourDigits());
         if (yesNoDialog("Confirm Payment? (Y,N) : ")) {
             //confirm
             while (true) {
                 try {
                     System.out.println("Verifying Payment Method...");
-                    ((Customer) loginManager.getCurrentUser()).addOrder(inventoryManager.createOrderRequest(((Customer) loginManager.getCurrentUser())));
+                    currentCustomer.addOrder(inventoryManager.createOrderRequest(currentCustomer));
                     System.out.println("Payment Completed");
-                    ((Customer) loginManager.getCurrentUser()).getCart().clear();
+                    currentCustomer.getCart().clear();
                     break;
                 } catch (InvalidCardException e) {
                     System.out.println("Your card number is invalid.");
@@ -97,7 +100,7 @@ public final class CustomerInterface extends BasicInterface {
                 if (yesNoDialog("Would you like to input a different card? (Y,N): ")) {
                     System.out.print("Enter new card number: ");
                     String cardNumber = Runner.scanner.nextLine();
-                    ((Customer) loginManager.getCurrentUser()).getCard().setNumber(cardNumber);
+                    currentCustomer.getCard().setNumber(cardNumber);
                 }
             }
         } else {
@@ -142,7 +145,7 @@ public final class CustomerInterface extends BasicInterface {
                     Runner.scanner.nextLine();
                 }
             } while (amount < 1 || !amountSet);
-            ((Customer) loginManager.getCurrentUser()).addToCart(selectedShipment.getItem(), amount);
+            currentCustomer.addToCart(selectedShipment.getItem(), amount);
             System.out.printf("%d %s added to cart.\n", amount, selectedShipment.getItem().getName());
         } catch (InputMismatchException e) {
             System.out.println("That is not an option.\nPlease try again.");
@@ -278,13 +281,13 @@ public final class CustomerInterface extends BasicInterface {
             switch (selection) {
                 case 1:
                     removeFromCartInterface();
-                    if (((Customer) loginManager.getCurrentUser()).getCart().isEmpty()) {
+                    if (currentCustomer.getCart().isEmpty()) {
                         System.out.println("The cart is now empty returning to menu");
                         return;
                     }
                     break;
                 case 2:
-                    ((Customer) loginManager.getCurrentUser()).getCart().clear();
+                    currentCustomer.getCart().clear();
                     return;
                 case 3:
                     return;
@@ -305,18 +308,18 @@ public final class CustomerInterface extends BasicInterface {
     private void removeFromCartInterface() {
         System.out.println("----[ Remove From Cart ]----");
         int i = 1;
-        for (Shipment cartItem : ((Customer) loginManager.getCurrentUser()).getCart()) {
+        for (Shipment cartItem : currentCustomer.getCart()) {
             System.out.printf("[%d] %d %s - $%.2f\n", i, cartItem.getAmount(), cartItem.getItem().getName(), cartItem.getItem().getPrice());
             i++;
         }
         System.out.println("----------------------------");
-        System.out.printf("[%d] Go Back\n", ((Customer) loginManager.getCurrentUser()).getCart().size() + 1);
+        System.out.printf("[%d] Go Back\n", currentCustomer.getCart().size() + 1);
         System.out.println("Please choose an option: ");
         try {
             int selection = Runner.scanner.nextInt();
             Runner.scanner.nextLine();
-            if (selection != ((Customer) loginManager.getCurrentUser()).getCart().size() + 1) {
-                Shipment selectedCartItem = ((Customer) loginManager.getCurrentUser()).getCart().get(selection - 1);
+            if (selection != currentCustomer.getCart().size() + 1) {
+                Shipment selectedCartItem = currentCustomer.getCart().get(selection - 1);
                 while (true) {
                     System.out.printf("-----[ Selected Item: %s ]-----\n", selectedCartItem.getItem().getName());
                     System.out.println("[1] Remove Amount");
@@ -339,7 +342,7 @@ public final class CustomerInterface extends BasicInterface {
                                             System.out.println("The amount to remove can't be larger than the amount in the cart.\nPlease try again.");
                                         } else {
                                             System.out.printf("%d %s removed from cart\n", amountToRemove, selectedCartItem.getItem().getName());
-                                            ((Customer) loginManager.getCurrentUser()).removeFromCart(selectedCartItem.getItem(), amountToRemove);
+                                            currentCustomer.removeFromCart(selectedCartItem.getItem(), amountToRemove);
                                             break;
                                         }
                                     } catch (InputMismatchException e) {
@@ -350,7 +353,7 @@ public final class CustomerInterface extends BasicInterface {
                                 break;
                             case 2:
                                 System.out.printf("%s removed from cart\n", selectedCartItem.getItem().getName());
-                                ((Customer) loginManager.getCurrentUser()).removeFromCart(selectedCartItem.getItem());
+                                currentCustomer.removeFromCart(selectedCartItem.getItem());
                                 break;
                             case 3:
                                 break;
@@ -365,7 +368,7 @@ public final class CustomerInterface extends BasicInterface {
                     }
                     break;
                 }
-                if (((Customer) loginManager.getCurrentUser()).getCart().isEmpty()) {
+                if (currentCustomer.getCart().isEmpty()) {
                     return;
                 }
             } else {
@@ -385,7 +388,7 @@ public final class CustomerInterface extends BasicInterface {
      */
     private void printCart() {
         System.out.println("----------[ Cart ]----------");
-        for (Shipment shipment : ((Customer) loginManager.getCurrentUser()).getCart()) {
+        for (Shipment shipment : currentCustomer.getCart()) {
             System.out.printf("%d %s - $%.2f\n", shipment.getAmount(), shipment.getItem().getName(), shipment.getItem().getPrice());
         }
         System.out.println("----------------------------");
@@ -398,7 +401,7 @@ public final class CustomerInterface extends BasicInterface {
         while (true) {
             System.out.println("----------[ Orders ]----------");
             int i = 1;
-            for (Order order : ((Customer) loginManager.getCurrentUser()).getOrders()) {
+            for (Order order : currentCustomer.getOrders()) {
                 System.out.printf("[%d] Order %d - %s\n", i, i, order.getOrderStatus().toString());
                 i++;
             }
@@ -414,7 +417,7 @@ public final class CustomerInterface extends BasicInterface {
                     System.out.println("That is not an option");
                 } else {
                     System.out.printf("----------[ Order %d ]----------\n", selection);
-                    System.out.println(((Customer) loginManager.getCurrentUser()).getOrders().get(selection - 1));
+                    System.out.println(currentCustomer.getOrders().get(selection - 1));
                     System.out.println("--------------------------------");
                     System.out.println("Press enter when you are done viewing.");
                     Runner.scanner.nextLine();

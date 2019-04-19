@@ -17,7 +17,6 @@ public class Runner {
         InventoryManager inventoryManager;
         LoginManager loginManager;
         BasicInterface basicInterface;
-
         try {
             inventoryManager = Serializer.readObject("Inventory.dat");
         } catch (IOException e) {
@@ -44,8 +43,6 @@ public class Runner {
             System.out.println("No class found. This is a problem.");
             return;
         }
-//TODO Removing this step from the login process, just have it auto-detect
-
         while (true){
             try {
                 System.out.println("What would you like to do?");

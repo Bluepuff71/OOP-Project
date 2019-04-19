@@ -38,7 +38,7 @@ public final class Order implements java.io.Serializable {
      */
     public Order(String customerUsername, List<Shipment> orderedItems, int authorizationNumber) {
         this.customerUsername = customerUsername;
-        this.orderedItems = orderedItems;
+        this.orderedItems = new ArrayList<>(orderedItems);
         this.authorizationNumber = authorizationNumber;
         this.orderStatus = OrderStatus.Ordered;
     }
