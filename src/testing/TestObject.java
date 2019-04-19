@@ -17,7 +17,7 @@ public class TestObject implements java.io.Serializable {
 
     public TestObject(String name, String password, int age) {
         this.name = name;
-        this.password = Hash.CreateHash(password, name);
+        this.password = Hash.createHash(password, name);
         this.age = age;
         this.cart = new ArrayList<Item>();
     }
@@ -38,7 +38,7 @@ public class TestObject implements java.io.Serializable {
     }
 
     public boolean testPassword(String name, String plaintext){
-        return Arrays.equals(this.password, Hash.CreateHash(plaintext, name));
+        return Arrays.equals(this.password, Hash.createHash(plaintext, name));
     }
 
     public String getName() {
