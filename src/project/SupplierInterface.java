@@ -9,14 +9,15 @@ public final class SupplierInterface extends BasicInterface {
 
     public SupplierInterface(LoginManager loginManager, InventoryManager inventoryManager) {
         super(loginManager, inventoryManager);
+
     }
 
     @Override
-    protected void mainInterface() {
+    public void mainInterface() {
         try {
             System.out.println("What would you like to do?");
             System.out.println("[1] Process Orders");
-            System.out.println("[2] Confirm Shipments");
+            System.out.println("[2] Confirm Order Shipments");
             System.out.println("[3] Create Inventory Order");
             System.out.println("[4] View all Orders");
             System.out.println("[5] Logout");
@@ -71,7 +72,7 @@ public final class SupplierInterface extends BasicInterface {
     }
 
     @Override
-    protected Supplier createAccount() {
+    public Supplier createAccount() {
         String username = "", plainText = "", error;
         while (true) {
             if (username.equals("") || plainText.equals("")) {
@@ -330,6 +331,9 @@ public final class SupplierInterface extends BasicInterface {
         int amount = -1;
         double price = -1;
         while (true) {
+            //TODO error checking can be done where the error actually happens now because this stuff is in a loop
+            //TODO move all the error checking into the loop
+            //TODO do this in all of the UI's that use this system
             if (itemName.equals("") || amount == -1 || price == -1) {
                 error = "Error: One or more fields have not been completed.\n";
             } else if (inventoryManager.itemInStock(new Item(itemName, price), 1)) {
@@ -339,8 +343,17 @@ public final class SupplierInterface extends BasicInterface {
             }
             System.out.println("---- Custom Inventory Order ----");
             System.out.printf("[1] Item Name [%s]\n", itemName);
-            System.out.printf("[2] Item Price [$%.2f]\n", price);
-            System.out.printf("[3] Amount to Add [%d]\n", amount);
+            if(price == -1){
+                System.out.println("[2] Item Price [Not Set]");
+            } else {
+                System.out.printf("[2] Item Price [$%.2f]\n", price);
+            }
+            if(amount == -1){
+                System.out.println("[3] Amount to Add [Not Set]");
+            } else {
+                System.out.printf("[3] Amount to Add [%d]\n", amount);
+            }
+
             if (error.equals("")) {
                 System.out.println("[4] Create Custom Inventory Order");
             }

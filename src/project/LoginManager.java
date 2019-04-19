@@ -9,6 +9,8 @@ public final class LoginManager implements java.io.Serializable {
      */
     private HashMap<String, Account> accountList;
 
+    private Account currentUser;
+
 
     /**
      * Creates a new loginManager
@@ -39,7 +41,6 @@ public final class LoginManager implements java.io.Serializable {
         } else {
             accountList.put(account.getUsername().toLowerCase(), account);
         }
-
     }
 
     /**
@@ -63,10 +64,30 @@ public final class LoginManager implements java.io.Serializable {
                     throw new InvalidAccountTypeException();
                 }
             } else {
+                currentUser = null;
                 throw new InvalidLoginException();
             }
         } else {
+            currentUser = null;
             throw new NoAccountFoundException();
         }
+    }
+
+    public Account getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(Account account) {
+        currentUser = account;
+    }
+
+    public void setCurrentUser(String username, String plainText) throws NoAccountFoundException, InvalidLoginException, InvalidAccountTypeException {
+        currentUser = getAccount(username, plainText);
+    }
+
+
+
+    public void logOutCurrentUser(){
+        currentUser = null;
     }
 }
