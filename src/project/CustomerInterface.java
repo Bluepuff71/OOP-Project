@@ -275,7 +275,7 @@ public final class CustomerInterface extends BasicInterface {
             System.out.println("[1] Remove Item");
             System.out.println("[2] Empty Cart");
             System.out.println("[3] Go Back");
-            System.out.println("Please choose an option: ");
+            System.out.print("Please choose an option: ");
             int selection = Runner.scanner.nextInt();
             Runner.scanner.nextLine();
             switch (selection) {
