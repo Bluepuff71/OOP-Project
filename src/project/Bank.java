@@ -19,7 +19,7 @@ public final class Bank {
             throw new CreditLimitException();
         } else {
             card.setCreditLimit(card.getCreditLimit() - totalCost);
-            return new Random().nextInt();
+            return Math.abs(new Random().nextInt());
         }
     }
 }
