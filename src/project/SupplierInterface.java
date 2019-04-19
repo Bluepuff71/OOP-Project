@@ -35,19 +35,19 @@ public final class SupplierInterface extends BasicInterface {
                     inventoryOrderInterface();
                     break;
                 case 4:
-                    if (!Supplier.getInventoryOrderList().isEmpty()) {
+                    if (!Supplier.getDeliveryOrderList().isEmpty()) {
                         System.out.println("----------[ All Orders ]----------");
                         if (!getOrdersByStatus(Order.OrderStatus.Ordered).isEmpty()) {
-                            System.out.println("------[Status: Ordered]------");
-                            getOrdersByStatus(Order.OrderStatus.Ordered).forEach(order -> System.out.printf("User: %s - Number of Items: %d", order.getCustomerUsername(), order.getOrderedItems().size()));
+                            System.out.println("-------[ Status:  Ordered ]-------");
+                            getOrdersByStatus(Order.OrderStatus.Ordered).forEach(order -> System.out.printf("User: %s - Number of Items: %d\n", order.getCustomerUsername(), order.getOrderedItems().size()));
                         }
                         if (!getOrdersByStatus(Order.OrderStatus.Ready).isEmpty()) {
-                            System.out.println("------[Status: Ready]------");
-                            getOrdersByStatus(Order.OrderStatus.Ready).forEach(order -> System.out.printf("User: %s - Number of Items: %d", order.getCustomerUsername(), order.getOrderedItems().size()));
+                            System.out.println("-------[ Status:  Ready ]-------");
+                            getOrdersByStatus(Order.OrderStatus.Ready).forEach(order -> System.out.printf("User: %s - Number of Items: %d\n", order.getCustomerUsername(), order.getOrderedItems().size()));
                         }
                         if (!getOrdersByStatus(Order.OrderStatus.Shipped).isEmpty()) {
-                            System.out.println("------[Status: Shipped]------");
-                            getOrdersByStatus(Order.OrderStatus.Shipped).forEach(order -> System.out.printf("User: %s - Number of Items: %d", order.getCustomerUsername(), order.getOrderedItems().size()));
+                            System.out.println("-------[ Status:  Shipped ]-------");
+                            getOrdersByStatus(Order.OrderStatus.Shipped).forEach(order -> System.out.printf("User: %s - Number of Items: %d\n", order.getCustomerUsername(), order.getOrderedItems().size()));
                         }
                         System.out.println("----------------------------------");
                         System.out.println("Press enter when you are finished");
@@ -126,7 +126,7 @@ public final class SupplierInterface extends BasicInterface {
             }
         }
     }
-
+    @SuppressWarnings("Duplicates")
     private void processOrdersInterface() {
         while (true) {
             List<Order> orders = getOrdersByStatus(Order.OrderStatus.Ordered);
@@ -140,14 +140,17 @@ public final class SupplierInterface extends BasicInterface {
                 int selection = Runner.scanner.nextInt();
                 Runner.scanner.nextLine();
                 //If they selected go back
-                if (selection == orders.size()) {
+                if (selection == orders.size() + 1) {
                     return;
-                } else if (selection > orders.size() || selection < 1) {
+                } else if (selection > orders.size() + 1 || selection < 1) {
                     System.out.println("That is not an option");
                 } else {
                     while (true) {
                         Order selectedOrder = orders.get(selection - 1);
                         printOrderSelection(selectedOrder, selection);
+                        System.out.println("[1] Reserve Items");
+                        System.out.println("[2] Go Back");
+                        System.out.print("Please choose an option: ");
                         selection = Runner.scanner.nextInt(); //reusing selection from earlier
                         Runner.scanner.nextLine();
                         try {
@@ -177,7 +180,7 @@ public final class SupplierInterface extends BasicInterface {
                                         selectedOrder.setOrderStatus(Order.OrderStatus.Ready);
                                         System.out.println("Inventory reserved successfully!");
                                         // No orders left
-                                        if (Supplier.getDeliveryOrderList().isEmpty()) {
+                                        if (orders.isEmpty()) {
                                             return; //Go back to the main menu
                                         } else {
                                             break; //Go back
@@ -212,7 +215,8 @@ public final class SupplierInterface extends BasicInterface {
                 order -> order.getOrderStatus() == requestedStatus
         ).collect(Collectors.toList());
     }
-
+    //TODO fix bug where the interface doesn't fully exit when there are no more orders to process
+    @SuppressWarnings("Duplicates")
     private void confirmShipmentsInterface() {
         while (true) {
             List<Order> orders = getOrdersByStatus(Order.OrderStatus.Ready);
@@ -220,20 +224,23 @@ public final class SupplierInterface extends BasicInterface {
                 System.out.println("There are no orders awaiting shipping.");
                 return;
             }
-            System.out.println("----------[ Ready Orders]----------");
+            System.out.println("----------[ Ready Orders ]----------");
             printOrders(orders);
             try {
                 int selection = Runner.scanner.nextInt();
                 Runner.scanner.nextLine();
                 //If they selected go back
-                if (selection == orders.size()) {
+                if (selection == orders.size() + 1) {
                     return;
-                } else if (selection > orders.size() || selection < 1) {
+                } else if (selection > orders.size() + 1 || selection < 1) {
                     System.out.println("That is not an option");
                 } else {
                     while (true) {
                         Order selectedOrder = orders.get(selection - 1);
                         printOrderSelection(selectedOrder, selection);
+                        System.out.println("[1] Confirm Shipment");
+                        System.out.println("[2] Go Back");
+                        System.out.print("Please choose an option: ");
                         selection = Runner.scanner.nextInt(); //reusing selection from earlier
                         Runner.scanner.nextLine();
                         try {
@@ -241,7 +248,12 @@ public final class SupplierInterface extends BasicInterface {
                                 case 1:
                                     selectedOrder.setOrderStatus(Order.OrderStatus.Shipped);
                                     System.out.println("Successfully confirmed shipment!");
-                                    continue;
+                                    // No orders left
+                                    if (orders.isEmpty()) {
+                                        continue; //Go back to the main menu
+                                    } else {
+                                        break; //Go back
+                                    }
                                 case 2:
                                     break; //Go back
                                 default:
@@ -275,9 +287,7 @@ public final class SupplierInterface extends BasicInterface {
         System.out.printf("----------[ Order %d ]----------\n", selectionID);
         System.out.println(order.toString());
         System.out.println("--------------------------------");
-        System.out.println("[1] Confirm Shipment");
-        System.out.println("[2] Go Back");
-        System.out.print("Please choose an option: ");
+
     }
 
     private void inventoryOrderInterface() {

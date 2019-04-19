@@ -21,7 +21,8 @@ public class Runner {
             inventoryManager = Serializer.readObject("Inventory.dat");
         } catch (IOException e) {
             inventoryManager = new InventoryManager();
-            /*inventoryManager.createInventoryOrder(new Item("Black Shirt", 30), 12);
+            //TODO comment this out when the bug with shipments is fixed
+            inventoryManager.createInventoryOrder(new Item("Black Shirt", 30), 12);
             inventoryManager.createInventoryOrder(new Item("Cool Socks", 6.36), 17);
             inventoryManager.createInventoryOrder(new Item("Extraordinarily Large Drum", 830), 1);
             inventoryManager.createInventoryOrder(new Item("Broken Chair", 15.67), 2);
@@ -30,7 +31,7 @@ public class Runner {
             inventoryManager.createInventoryOrder(new Item("Quantum Entanglement Device", 860000), 15);
             inventoryManager.createInventoryOrder(new Item("sICK Skateboard", 24), 32);
             inventoryManager.createInventoryOrder(new Item("Interesting goo", 12.25), 46);
-            inventoryManager.createInventoryOrder(new Item("Bag of lukewarm milk", 3.38), 5);*/
+            inventoryManager.createInventoryOrder(new Item("Bag of lukewarm milk", 3.38), 5);
         } catch (ClassNotFoundException e) {
             System.out.println("No class found. This is a problem.");
             return;
