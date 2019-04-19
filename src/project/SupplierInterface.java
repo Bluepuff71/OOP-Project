@@ -264,10 +264,10 @@ public final class SupplierInterface extends BasicInterface {
 
     private void printOrders(List<Order> orders) {
         for (int i = 0; i < orders.size(); i++) {
-            System.out.printf("[%d] Order %d\n", i, i);
+            System.out.printf("[%d] Order %d\n", i + 1, i + 1);
         }
         System.out.println("-------------------------------------");
-        System.out.printf("[%d] Go back\n", orders.size());
+        System.out.printf("[%d] Go back\n", orders.size() + 1);
         System.out.print("Which order would you like to view?: ");
     }
 
