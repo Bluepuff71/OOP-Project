@@ -47,20 +47,8 @@ public final class Order implements java.io.Serializable {
         return orderedItems;
     }
 
-    public void setOrderedItems(List<Shipment> orderedItems) {
-        this.orderedItems = orderedItems;
-    }
-
     public String getCustomerUsername() {
         return customerUsername;
-    }
-
-    public void setCustomerUsername(String customerUsername) {
-        this.customerUsername = customerUsername;
-    }
-
-    public int getAuthorizationNumber() {
-        return authorizationNumber;
     }
 
     public OrderStatus getOrderStatus() {
@@ -79,7 +67,8 @@ public final class Order implements java.io.Serializable {
             output.append(String.format("Item %d: %s - Amount: %d\n", i, shipment.getItem().getName(), shipment.getAmount()));
             i++;
         }
-        output.append(String.format("\nOrder Status: %s", this.getOrderStatus().toString()));
+        output.append(String.format("Authorization Number: %d\n",this.authorizationNumber));
+        output.append(String.format("Order Status: %s", this.getOrderStatus().toString()));
         return output.toString();
     }
 }
