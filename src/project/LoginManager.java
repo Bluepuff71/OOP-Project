@@ -9,6 +9,8 @@ public final class LoginManager implements java.io.Serializable {
      */
     private HashMap<String, Account> accountList;
 
+    private Account currentUser;
+
 
     /**
      * Creates a new loginManager
@@ -27,13 +29,18 @@ public final class LoginManager implements java.io.Serializable {
         return accountList.containsKey(username.toLowerCase());
     }
 
-    public final void addCustomerAccount(Customer customer) throws UsernameTakenException {
-        if (usernameTaken(customer.getUsername())) {
+    /**
+     * Adds a new customer account to the account list
+     *
+     * @param account the account to add
+     * @throws UsernameTakenException if the username is already taken
+     */
+    public final <T extends Account> void addAccount(T account) throws UsernameTakenException {
+        if (usernameTaken(account.getUsername())) {
             throw new UsernameTakenException();
         } else {
-            accountList.put(customer.getUsername().toLowerCase(), customer);
+            accountList.put(account.getUsername().toLowerCase(), account);
         }
-
     }
 
     /**
@@ -46,21 +53,41 @@ public final class LoginManager implements java.io.Serializable {
      * @throws InvalidLoginException       if the credentials didn't work
      * @throws InvalidAccountTypeException if the account type is not a customer account
      */
-    public final Customer getCustomerAccount(String username, String plainText) throws NoAccountFoundException, InvalidLoginException, InvalidAccountTypeException {
+    public final <T extends Account> T getAccount(String username, String plainText) throws NoAccountFoundException, InvalidLoginException, InvalidAccountTypeException {
         //if account exists
         if (accountList.containsKey(username.toLowerCase())) {
             //Check password
             if (accountList.get(username.toLowerCase()).verifyCredentials(username, plainText)) {
                 try {
-                    return (Customer) accountList.get(username.toLowerCase());
+                    return (T) accountList.get(username.toLowerCase());
                 } catch (ClassCastException e) {
                     throw new InvalidAccountTypeException();
                 }
             } else {
+                currentUser = null;
                 throw new InvalidLoginException();
             }
         } else {
+            currentUser = null;
             throw new NoAccountFoundException();
         }
+    }
+
+    public Account getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(Account account) {
+        currentUser = account;
+    }
+
+    public void setCurrentUser(String username, String plainText) throws NoAccountFoundException, InvalidLoginException, InvalidAccountTypeException {
+        currentUser = getAccount(username, plainText);
+    }
+
+
+
+    public void logOutCurrentUser(){
+        currentUser = null;
     }
 }

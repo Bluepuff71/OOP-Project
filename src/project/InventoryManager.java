@@ -1,13 +1,14 @@
 package project;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class InventoryManager implements java.io.Serializable {
 
     /**
      * The inventory of the storefront
      */
-    private ArrayList<Shipment> inventory;
+    private List<Shipment> inventory;
 
     public InventoryManager() {
         inventory = new ArrayList<>();
@@ -49,7 +50,7 @@ public class InventoryManager implements java.io.Serializable {
      */
     public Shipment getShipmentFromInventory(Item item) throws ItemNotFoundException, NullPointerException {
         for (Shipment shipment : inventory) {
-            if (shipment.getItem().equals(item)) {
+            if (shipment.getItem().getName().equals(item.getName())) {
                 return shipment;
             }
         }
@@ -84,16 +85,19 @@ public class InventoryManager implements java.io.Serializable {
 
 
     /**
-     * Removes the specified amount of an item from the inventory
+     * Removes the specified amount of an item from the inventory (removes the item from the inventory if needed)
      *
      * @param item   the item to remove
      * @param amount the amount to remove
      * @throws OutOfStockException if there are not enough items to remove
+     * @throws ItemNotFoundException if the item isn't found in the inventory
      */
     public void removeFromInventory(Item item, int amount) throws OutOfStockException, ItemNotFoundException {
         Shipment selectedShipment = getShipmentFromInventory(item);
-        if (selectedShipment.getAmount() >= amount) {
+        if (selectedShipment.getAmount() > amount) {
             selectedShipment.setAmount(selectedShipment.getAmount() - amount);
+        } else if (selectedShipment.getAmount() == amount) {
+            inventory.remove(selectedShipment);
         } else {
             throw new OutOfStockException(item);
         }

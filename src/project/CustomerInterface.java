@@ -4,116 +4,20 @@ import runner.Runner;
 
 import java.util.InputMismatchException;
 
-public final class CustomerInterface {
+public final class CustomerInterface extends BasicInterface {
 
-    /**
-     * The current logged in customer
-     */
-    private Customer currentCustomer;
-
-    /**
-     * The login manager...
-     */
-    private LoginManager loginManager;
-
-    /**
-     * The storefront that the customer will browse
-     */
-    private InventoryManager inventoryManager;
-
-    /**
-     * Creates a CustomerInterface with a specified loginManager
-     *
-     * @param loginManager the loginManager to use
-     */
     public CustomerInterface(LoginManager loginManager, InventoryManager inventoryManager) {
-        this.loginManager = loginManager;
-        this.inventoryManager = inventoryManager;
+        super(loginManager, inventoryManager);
     }
 
-    /**
-     * The account step of the customer interface
-     */
-    public void initialMenu() {
-        try {
-            System.out.println("What would you like to do?");
-            System.out.println("[1] Login");
-            System.out.println("[2] Create Account");
-            System.out.println("[3] Go back");
-            System.out.print("Please choose an option: ");
-            int selection = Runner.scanner.nextInt();
-            Runner.scanner.nextLine();
-            switch (selection) {
-                case 1: //login
-                    login();
-                    break;
-                case 2: //create account
-                    currentCustomer = createAccount("", "", "", "", "", "", "");
-                    //if the user didn't cancel account creation
-                    if (currentCustomer != null) {
-                        loginManager.addCustomerAccount(currentCustomer);
-                        System.out.println("Account has been created.");
-                        mainInterface();
-                    } else {
-                        System.out.println("Account creation has been cancelled.\nReturning to menu.");
-                    }
-                    break;
-                case 3:
-                    return;
-                default:
-                    System.out.println("That is not an option.\nPlease try again");
-                    break;
-            }
-        } catch (UsernameTakenException e) {
-            System.out.println("THIS ERROR SHOULDN'T BE POSSIBLE");
-        } catch (InputMismatchException e) {
-            System.out.println("That is not an option.\nPlease try again");
-            Runner.scanner.nextLine();
-        }
-        initialMenu();
-    }
-
-    /**
-     * The login menu
-     */
-    private void login() {
-        try {
-            System.out.println("---- Login ----");
-            System.out.print("Username: ");
-            String username = Runner.scanner.nextLine();//grab input
-            System.out.print("Password: ");
-            String plainText = Runner.scanner.nextLine(); //grab input
-            currentCustomer = loginManager.getCustomerAccount(username, plainText); //get the customer from the login manager
-            mainInterface();
-        } catch (NoAccountFoundException e) {
-            System.out.println("Account doesn't exist");
-            if (yesNoDialog("Would you like to try again? (Y,N): ")) {
-                this.login();
-            } else {
-                currentCustomer = null;
-            }
-        } catch (InvalidLoginException | InvalidAccountTypeException e) {
-            System.out.println("That username/password combination is not correct.");
-            if (yesNoDialog("Would you like to try again? (Y,N): ")) {
-                this.login();
-            } else {
-                currentCustomer = null;
-            }
-        }
-    }
-
-    /**
-     * Logs the current customer out
-     */
-    private void logout() {
-        this.currentCustomer = null;
-    }
-
+    private Customer currentCustomer;
 
     /**
      * The main menu of the customer interface
      */
-    private void mainInterface() {
+    @Override
+    public void mainInterface() {
+        currentCustomer = (Customer) loginManager.getCurrentUser();
         try {
             System.out.println("What would you like to do?");
             System.out.println("[1] Browse Catalog");
@@ -126,7 +30,11 @@ public final class CustomerInterface {
             Runner.scanner.nextLine(); //catches the \n not caught by nextInt()
             switch (selection) {
                 case 1:
-                    selectItemInterface();
+                    if (inventoryManager.getInventorySize() == 0){
+                        System.out.println("The storefront is empty.");
+                    } else {
+                        selectItemInterface();
+                    }
                     break;
                 case 2:
                     if (currentCustomer.getCart().isEmpty()) {
@@ -246,135 +154,111 @@ public final class CustomerInterface {
         selectItemInterface();
     }
 
+
     /**
      * Creates a new customer account and logs it in (Defaults should be "")
      *
-     * @param username             the default username
-     * @param plainText            the default plaintext password
-     * @param phoneNumber          the default phone number
-     * @param address              the default address
-     * @param cardNumber           the default card number
-     * @param formattedPhoneNumber the default formatted phone number
-     * @param formattedCardNumber  the default formatted card number
      * @return the new customer or null if the user backs out
      */
-    private Customer createAccount(String username, String plainText, String phoneNumber, String address, String cardNumber, String formattedPhoneNumber, String formattedCardNumber) {
-        String error;
-        if (username.equals("") || plainText.equals("") || phoneNumber.equals("") || address.equals("") || cardNumber.equals("")) {
-            error = "Error: One or more fields have not been completed.\n";
-        } else if (loginManager.usernameTaken(username)) {
-            error = "Error: That username is taken\n";
-        } else if (username.contains(" ")) {
-            error = "Error: Username contains invalid characters\n";
-        } else if (plainText.contains(" ")) {
-            error = "Error: Password contains invalid characters\n";
-        } else if (phoneNumber.matches(".*\\D.*")) {
-            error = "Error: Phone number may only contain numbers\n";
-        } else if (phoneNumber.length() != 10) {
-            error = "Error: Phone numbers can only be 10 characters long.\n";
-        } else if (cardNumber.matches(".*\\D.*")) {
-            error = "Error: Card number may only contain numbers\n";
-        } else if (cardNumber.length() != 16) {
-            error = "Error: Card number must be exactly 16 numbers long\n";
-        } else {
-            error = "";
-        }
-        System.out.println("---- New Customer Account ----");
-        System.out.printf("[1] Username [%s]\n", username);
-        System.out.printf("[2] Password [%s]\n", plainText);
-        System.out.printf("[3] Phone # [%s]\n", formattedPhoneNumber);
-        System.out.printf("[4] Address [%s]\n", address);
-        System.out.printf("[5] Card # [%s]\n", formattedCardNumber);
-        if (error.equals("")) {
-            System.out.println("[6] Create Account");
-        }
-        System.out.println("[7] Cancel");
-        System.out.print(error);
-        System.out.print("Please choose an option: ");
-        try {
-            int selection = Runner.scanner.nextInt();
-            Runner.scanner.nextLine();
-            switch (selection) {
-                case 1:
-                    System.out.print("Enter Username: ");
-                    username = Runner.scanner.nextLine();
-                    break;
-                case 2:
-                    System.out.print("Enter Password: ");
-                    plainText = Runner.scanner.nextLine();
-                    break;
-                case 3:
-                    System.out.print("Enter Phone #: ");
-                    phoneNumber = Runner.scanner.nextLine();
-                    if (phoneNumber.length() != 10) {
-                        formattedPhoneNumber = phoneNumber;
-                        break;
-                    } else {
-                        formattedPhoneNumber = "";
-                        phoneNumber = phoneNumber.replace(" ", "");
-                        phoneNumber = phoneNumber.replace("-", "");
-                        for (int i = 0; i < 2; i++) {
-                            formattedPhoneNumber += phoneNumber.substring(i * 3, (i * 3) + 3) + "-";
-                        }
-                        formattedPhoneNumber += phoneNumber.substring(6);
-                        break;
-                    }
-                case 4:
-                    System.out.print("Enter Address: ");
-                    address = Runner.scanner.nextLine();
-                    break;
-                case 5:
-                    System.out.print("Enter Card Number: ");
-                    cardNumber = Runner.scanner.nextLine();
-                    if (cardNumber.length() != 16) {
-                        formattedCardNumber = cardNumber;
-                        break;
-                    } else {
-                        formattedCardNumber = "";
-                        cardNumber = cardNumber.replace(" ", "");
-                        for (int i = 0; i < 3; i++) {
-                            formattedCardNumber += cardNumber.substring(i * 4, (i * 4) + 4) + " ";
-                        }
-                        formattedCardNumber += cardNumber.substring(12);
-                        break;
-                    }
-                case 6:
-                    if (error.equals("")) {
-                        return new Customer(username, plainText, phoneNumber, address, new Card(cardNumber, 1000));
-                    } else {
-                        System.out.println("Account cannot be created while errors exist.");
-                        break;
-                    }
-
-                case 7:
-                    return null;
-                default:
-                    System.out.println("That is not an option.\nPlease try again.");
-                    break;
-            }
-        } catch (InputMismatchException e) {
-            System.out.println("That is not an option.\nPlease try again.");
-            Runner.scanner.nextLine();
-        }
-        return createAccount(username, plainText, phoneNumber, address, cardNumber, formattedPhoneNumber, formattedCardNumber);
-    }
-
-    /**
-     * Prints a dialog with yes or no options
-     *
-     * @param text the yes/no question to ask
-     * @return true if yes, false if no
-     */
-    private boolean yesNoDialog(String text) {
+    @Override
+    public Customer createAccount() {
+        String username = "", plainText = "", phoneNumber = "", address = "", cardNumber = "", formattedPhoneNumber = "", formattedCardNumber = "", error;
         while (true) {
-            System.out.print(text);
-            String selection = Runner.scanner.nextLine();
-            if (selection.toLowerCase().equals("y")) {
-                return true;
-            } else if (selection.toLowerCase().equals("n")) {
-                return false;
+            if (username.equals("") || plainText.equals("") || phoneNumber.equals("") || address.equals("") || cardNumber.equals("")) {
+                error = "Error: One or more fields have not been completed.\n";
+            } else if (super.loginManager.usernameTaken(username)) {
+                error = "Error: That username is taken\n";
+            } else if (username.contains(" ")) {
+                error = "Error: Username contains invalid characters\n";
+            } else if (plainText.contains(" ")) {
+                error = "Error: Password contains invalid characters\n";
+            } else if (phoneNumber.matches(".*\\D.*")) {
+                error = "Error: Phone number may only contain numbers\n";
+            } else if (phoneNumber.length() != 10) {
+                error = "Error: Phone numbers can only be 10 characters long.\n";
+            } else if (cardNumber.matches(".*\\D.*")) {
+                error = "Error: Card number may only contain numbers\n";
+            } else if (cardNumber.length() != 16) {
+                error = "Error: Card number must be exactly 16 numbers long\n";
             } else {
-                System.out.println("That is not an option");
+                error = "";
+            }
+            System.out.println("---- New Customer Account ----");
+            System.out.printf("[1] Username [%s]\n", username);
+            System.out.printf("[2] Password [%s]\n", plainText);
+            System.out.printf("[3] Phone # [%s]\n", formattedPhoneNumber);
+            System.out.printf("[4] Address [%s]\n", address);
+            System.out.printf("[5] Card # [%s]\n", formattedCardNumber);
+            if (error.equals("")) {
+                System.out.println("[6] Create Account");
+            }
+            System.out.println("[7] Cancel");
+            System.out.print(error);
+            System.out.print("Please choose an option: ");
+            try {
+                int selection = Runner.scanner.nextInt();
+                Runner.scanner.nextLine();
+                switch (selection) {
+                    case 1:
+                        System.out.print("Enter Username: ");
+                        username = Runner.scanner.nextLine();
+                        break;
+                    case 2:
+                        System.out.print("Enter Password: ");
+                        plainText = Runner.scanner.nextLine();
+                        break;
+                    case 3:
+                        System.out.print("Enter Phone #: ");
+                        phoneNumber = Runner.scanner.nextLine();
+                        if (phoneNumber.length() != 10) {
+                            formattedPhoneNumber = phoneNumber;
+                            break;
+                        } else {
+                            formattedPhoneNumber = "";
+                            phoneNumber = phoneNumber.replace(" ", "");
+                            phoneNumber = phoneNumber.replace("-", "");
+                            for (int i = 0; i < 2; i++) {
+                                formattedPhoneNumber += phoneNumber.substring(i * 3, (i * 3) + 3) + "-";
+                            }
+                            formattedPhoneNumber += phoneNumber.substring(6);
+                            break;
+                        }
+                    case 4:
+                        System.out.print("Enter Address: ");
+                        address = Runner.scanner.nextLine();
+                        break;
+                    case 5:
+                        System.out.print("Enter Card Number: ");
+                        cardNumber = Runner.scanner.nextLine();
+                        if (cardNumber.length() != 16) {
+                            formattedCardNumber = cardNumber;
+                            break;
+                        } else {
+                            formattedCardNumber = "";
+                            cardNumber = cardNumber.replace(" ", "");
+                            for (int i = 0; i < 3; i++) {
+                                formattedCardNumber += cardNumber.substring(i * 4, (i * 4) + 4) + " ";
+                            }
+                            formattedCardNumber += cardNumber.substring(12);
+                            break;
+                        }
+                    case 6:
+                        if (error.equals("")) {
+                            return new Customer(username, plainText, phoneNumber, address, new Card(cardNumber, 1000));
+                        } else {
+                            System.out.println("Account cannot be created while errors exist.");
+                            break;
+                        }
+
+                    case 7:
+                        return null;
+                    default:
+                        System.out.println("That is not an option.\nPlease try again.");
+                        break;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("That is not an option.\nPlease try again.");
+                Runner.scanner.nextLine();
             }
         }
     }
@@ -389,7 +273,7 @@ public final class CustomerInterface {
             System.out.println("[1] Remove Item");
             System.out.println("[2] Empty Cart");
             System.out.println("[3] Go Back");
-            System.out.println("Please choose an option: ");
+            System.out.print("Please choose an option: ");
             int selection = Runner.scanner.nextInt();
             Runner.scanner.nextLine();
             switch (selection) {
@@ -530,19 +414,12 @@ public final class CustomerInterface {
                 } else if (selection > i || selection < 1) {
                     System.out.println("That is not an option");
                 } else {
-                    i = 1;
                     System.out.printf("----------[ Order %d ]----------\n", selection);
-                    Order selectedOrder = currentCustomer.getOrders().get(selection - 1);
-                    for (Shipment shipment : selectedOrder.getOrderedItems()) {
-                        System.out.printf("Item %d: %s - Amount: %d\n", i, shipment.getItem().getName(), shipment.getAmount());
-                        i++;
-                    }
-                    System.out.printf("\nOrder Status: %s\n", selectedOrder.getOrderStatus().toString());
+                    System.out.println(currentCustomer.getOrders().get(selection - 1));
                     System.out.println("--------------------------------");
                     System.out.println("Press enter when you are done viewing.");
                     Runner.scanner.nextLine();
                 }
-
             } catch (InputMismatchException e) {
                 System.out.println("That is not an option");
                 Runner.scanner.nextLine();
