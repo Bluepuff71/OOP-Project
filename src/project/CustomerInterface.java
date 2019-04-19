@@ -58,7 +58,7 @@ public final class CustomerInterface extends BasicInterface {
                     }
                     break;
                 case 5:
-                    logout();
+                    loginManager.logOutCurrentUser();
                     System.out.println("You have been logged out.");
                     return;
                 default:

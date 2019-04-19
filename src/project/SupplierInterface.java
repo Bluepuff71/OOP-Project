@@ -57,7 +57,7 @@ public final class SupplierInterface extends BasicInterface {
                     }
                     break;
                 case 5:
-                    logout();
+                    loginManager.logOutCurrentUser();
                     System.out.println("You have been logged out.");
                     return;
                 default:

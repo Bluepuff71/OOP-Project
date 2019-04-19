@@ -85,8 +85,6 @@ public final class LoginManager implements java.io.Serializable {
         currentUser = getAccount(username, plainText);
     }
 
-
-
     public void logOutCurrentUser(){
         currentUser = null;
     }
