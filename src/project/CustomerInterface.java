@@ -34,7 +34,11 @@ public final class CustomerInterface extends BasicInterface {
             Runner.scanner.nextLine(); //catches the \n not caught by nextInt()
             switch (selection) {
                 case 1:
-                    selectItemInterface();
+                    if (inventoryManager.getInventorySize() == 0){
+                        System.out.println("The storefront is empty.");
+                    } else {
+                        selectItemInterface();
+                    }
                     break;
                 case 2:
                     if (currentCustomer.getCart().isEmpty()) {
