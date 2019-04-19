@@ -215,7 +215,6 @@ public final class SupplierInterface extends BasicInterface {
                 order -> order.getOrderStatus() == requestedStatus
         ).collect(Collectors.toList());
     }
-    //TODO fix bug where the interface doesn't fully exit when there are no more orders to process
     @SuppressWarnings("Duplicates")
     private void confirmShipmentsInterface() {
         while (true) {
@@ -341,9 +340,6 @@ public final class SupplierInterface extends BasicInterface {
         int amount = -1;
         double price = -1;
         while (true) {
-            //TODO error checking can be done where the error actually happens now because this stuff is in a loop
-            //TODO move all the error checking into the loop
-            //TODO do this in all of the UI's that use this system
             if (itemName.equals("") || amount == -1 || price == -1) {
                 error = "Error: One or more fields have not been completed.\n";
             } else if (inventoryManager.itemInStock(new Item(itemName, price), 1)) {

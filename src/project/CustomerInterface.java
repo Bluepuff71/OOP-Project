@@ -6,8 +6,6 @@ import java.util.InputMismatchException;
 
 public final class CustomerInterface extends BasicInterface {
 
-    //TODO add lambda functions for any search
-
     public CustomerInterface(LoginManager loginManager, InventoryManager inventoryManager) {
         super(loginManager, inventoryManager);
     }

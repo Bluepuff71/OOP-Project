@@ -8,7 +8,6 @@ import java.util.List;
 
 public final class Supplier extends Account implements java.io.Serializable {
 
-    //TODO fix the static fields so they will be serialized
     /**
      * The list of orders that have been created
      */
