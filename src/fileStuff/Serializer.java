@@ -2,6 +2,9 @@ package fileStuff;
 
 import java.io.*;
 
+/**
+ * Handles reading and writing serialized files
+ */
 public class Serializer {
 
     /**
@@ -27,6 +30,7 @@ public class Serializer {
      * Deserializes an object from a file. Generically handles all exceptions.
      *
      * @param fileName the file to read from
+     * @param <T> the type of object to create
      * @return the deserialized object or null if an error occurred
      */
     public static <T> T q_ReadObject(String fileName) {
@@ -50,8 +54,9 @@ public class Serializer {
      * Deserializes an object from a file.
      *
      * @param fileName the file to read from
+     * @param <T> the type of object to create
      * @return the deserialized object
-     * @throws IOException            if there is a problem opening the file
+     * @throws IOException if there is a problem opening the file
      * @throws ClassNotFoundException if the data type specified doesn't exist
      */
     @SuppressWarnings("unchecked")

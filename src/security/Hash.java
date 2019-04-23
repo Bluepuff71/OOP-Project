@@ -16,7 +16,7 @@ public class Hash {
      * @param salt      the salt to add to the hash
      * @return the salted hash
      */
-    public static byte[] CreateHash(String plainText, String salt) {
+    public static byte[] createHash(String plainText, String salt) {
         byte[] byteSalt = salt.getBytes(StandardCharsets.UTF_8);
         KeySpec spec = new PBEKeySpec(plainText.toCharArray(), byteSalt, 65536, 128);
         try {
@@ -30,5 +30,4 @@ public class Hash {
         System.out.println("There was an error hashing the text. Emery did something wrong...");
         return null;
     }
-
 }

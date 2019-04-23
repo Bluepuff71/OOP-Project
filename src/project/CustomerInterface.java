@@ -4,12 +4,28 @@ import runner.Runner;
 
 import java.util.InputMismatchException;
 
+/**
+ * The frontend encapsulating all actions that can be done by a customer account
+ *
+ * @see Customer
+ */
 public final class CustomerInterface extends BasicInterface {
 
+    /**
+     * Creates a new instance of the customer interface
+     * @param loginManager the login manager to use
+     * @param inventoryManager the inventory manager to use
+     * @see LoginManager
+     * @see InventoryManager
+     */
     public CustomerInterface(LoginManager loginManager, InventoryManager inventoryManager) {
         super(loginManager, inventoryManager);
     }
 
+    /**
+     * The current customer that is signed in
+     * @see Customer
+     */
     private Customer currentCustomer;
 
     /**
@@ -58,7 +74,7 @@ public final class CustomerInterface extends BasicInterface {
                     }
                     break;
                 case 5:
-                    logout();
+                    loginManager.logOutCurrentUser();
                     System.out.println("You have been logged out.");
                     return;
                 default:
@@ -73,7 +89,8 @@ public final class CustomerInterface extends BasicInterface {
     }
 
     /**
-     * The interface for doing checkout on a cart
+     * The interface for doing checking out the customer's cart
+     * @see Customer
      */
     private void checkOutInterface() {
         System.out.println("----------[ Checkout ]-----------");
@@ -109,7 +126,7 @@ public final class CustomerInterface extends BasicInterface {
     }
 
     /**
-     * Interface for users to select items from the store
+     * Interface for customers to select items from the store
      */
     private void selectItemInterface() {
         try {
@@ -158,7 +175,7 @@ public final class CustomerInterface extends BasicInterface {
     /**
      * Creates a new customer account and logs it in (Defaults should be "")
      *
-     * @return the new customer or null if the user backs out
+     * @return the new customer or {@code null} if the user backs out
      */
     @Override
     public Customer createAccount() {
@@ -265,6 +282,7 @@ public final class CustomerInterface extends BasicInterface {
 
     /**
      * Prints the customer's cart
+     * @see Customer
      */
     private void editCartInterface() {
         try {

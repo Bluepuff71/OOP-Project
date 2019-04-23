@@ -3,11 +3,16 @@ package project;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * An order created by a user
+ */
 public final class Order implements java.io.Serializable {
+
     /**
      * The username of the customer
      */
     private String customerUsername;
+
     /**
      * The items that were ordered
      */
@@ -18,9 +23,23 @@ public final class Order implements java.io.Serializable {
      */
     private int authorizationNumber;
 
+    /**
+     * An enum containing all states for an order
+     */
     public enum OrderStatus {
+        /**
+         * The initial status of all orders
+         */
         Ordered,
+
+        /**
+         * The order has been processed and the inventory has been reserved
+         */
         Ready,
+
+        /**
+         * The order has been shipped to the customer
+         */
         Shipped
     }
 
@@ -43,22 +62,47 @@ public final class Order implements java.io.Serializable {
         this.orderStatus = OrderStatus.Ordered;
     }
 
+    /**
+     * Returns a list of all the items that were ordered
+     *
+     * @return a list of all the items that were ordered
+     * @see #orderedItems
+     */
     public List<Shipment> getOrderedItems() {
         return orderedItems;
     }
 
+    /**
+     * Returns the username of the customer that submitted the order
+     * @return the username of the customer that submitted the order
+     * @see #customerUsername
+     */
     public String getCustomerUsername() {
         return customerUsername;
     }
 
+
+    /**
+     * Returns the status of the order
+     * @return the status of the order
+     * @see OrderStatus
+     * @see #orderStatus
+     */
     public OrderStatus getOrderStatus() {
         return orderStatus;
     }
 
+    /**
+     * Sets the status of the order
+     * @param orderStatus the status to set to
+     */
     public void setOrderStatus(OrderStatus orderStatus) {
         this.orderStatus = orderStatus;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         StringBuilder output = new StringBuilder();
