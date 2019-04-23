@@ -1,2 +1,5 @@
-# TTU-Stuff
-This is a repository for all the stuff I have to do for my comp sci degree.
+# OOP-Project
+This is the repository for my object oriented project.
+
+## Documentation
+The documentation can be found here: bluepuff71.github.io/TTU-Stuff/
