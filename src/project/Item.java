@@ -27,14 +27,28 @@ public final class Item implements java.io.Serializable {
         this.price = price;
     }
 
+    /**
+     * Returns the name of item
+     *
+     * @return the name of the item
+     * @see #name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns the price of the item
+     * @return the price of the item
+     * @see #price
+     */
     public double getPrice() {
         return price;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return String.format("%s - %.2f", this.name, this.price);

@@ -2,13 +2,18 @@ package project;
 
 import java.util.Random;
 
+/**
+ * The object representing the Bank user
+ */
 public final class Bank {
+
     /**
      * Generates a authorization number
      *
      * @param card      the debit/credit card of the user
      * @param totalCost the total cost of the order
      * @return the authorization number
+     * @see Customer
      * @throws InvalidCardException if the card is invalid
      * @throws CreditLimitException if the credit limit is exceeded by the transaction
      */

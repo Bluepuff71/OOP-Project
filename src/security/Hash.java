@@ -30,5 +30,4 @@ public class Hash {
         System.out.println("There was an error hashing the text. Emery did something wrong...");
         return null;
     }
-
 }

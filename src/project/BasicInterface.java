@@ -35,8 +35,16 @@ public abstract class BasicInterface {
         this.inventoryManager = inventoryManager;
     }
 
+    /**
+     * The main menu for all interfaces
+     */
     public abstract void mainInterface();
 
+    /**
+     * The menu that allows a user to create an account
+     *
+     * @return the account that was created
+     */
     public abstract Account createAccount();
 
     /**

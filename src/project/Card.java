@@ -1,7 +1,7 @@
 package project;
 
 /**
- * All the information for a debit/credit card
+ * The basic information for a debit/credit card
  */
 public final class Card implements java.io.Serializable {
 
@@ -18,8 +18,8 @@ public final class Card implements java.io.Serializable {
     /**
      * Creates a new card
      *
-     * @param number          the main numbers on the front of the card
-     * @param creditLimit     the amount of money the card is allowed to spend
+     * @param number      the main numbers on the front of the card
+     * @param creditLimit the amount of money the card is allowed to spend
      */
     public Card(String number, int creditLimit) {
         this.number = number;
@@ -34,7 +34,7 @@ public final class Card implements java.io.Serializable {
     /**
      * Validates the card (Length = 16, Only numbers)
      *
-     * @return true if the card is valid, false otherwise
+     * @return {@code true} if the card is valid, {@code false} otherwise
      */
     public boolean isValid() {
         if (number.length() != 16) {
@@ -57,6 +57,7 @@ public final class Card implements java.io.Serializable {
 
     /**
      * Sets the credit limit of the card
+     *
      * @param creditLimit the credit limit to set
      */
     public void setCreditLimit(double creditLimit) {
@@ -65,6 +66,7 @@ public final class Card implements java.io.Serializable {
 
     /**
      * Gets the card's credit limit
+     *
      * @return the card's credit limit
      */
     public double getCreditLimit() {

@@ -1,10 +1,9 @@
 package project;
 
+/**
+ * Exception for handling when trying access a piece of an account with without logging in
+ */
 public class UnauthorizedException extends Exception {
-    public UnauthorizedException() {
-        super();
-    }
-
     @Override
     public String getMessage() {
         return "401 Unauthorized";

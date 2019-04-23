@@ -5,13 +5,25 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The frontend encapsulating all actions that can be done by a supplier account
+ *
+ * @see Supplier
+ */
 public final class SupplierInterface extends BasicInterface {
 
+    /**
+     * Creates a new supplier interface
+     * @param loginManager the login manager for the interface
+     * @param inventoryManager the inventory manager for the interface
+     */
     public SupplierInterface(LoginManager loginManager, InventoryManager inventoryManager) {
         super(loginManager, inventoryManager);
-
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void mainInterface() {
         try {
@@ -71,6 +83,9 @@ public final class SupplierInterface extends BasicInterface {
         mainInterface();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Supplier createAccount() {
         String username = "", plainText = "", error;
@@ -126,6 +141,11 @@ public final class SupplierInterface extends BasicInterface {
             }
         }
     }
+
+    /**
+     * The interface that allows suppliers to process delivery orders
+     * @see Supplier
+     */
     @SuppressWarnings("Duplicates")
     private void processOrdersInterface() {
         while (true) {
@@ -209,12 +229,21 @@ public final class SupplierInterface extends BasicInterface {
         }
     }
 
+    /**
+     * Gets a list of orders by the specified order status
+     * @param requestedStatus the specified order status
+     * @return the list of orders by the specified order status
+     */
     private List<Order> getOrdersByStatus(Order.OrderStatus requestedStatus) {
         //Super fancy lambda function
         return Supplier.getDeliveryOrderList().stream().filter(
                 order -> order.getOrderStatus() == requestedStatus
         ).collect(Collectors.toList());
     }
+
+    /**
+     * The interface that allows suppliers to confirm shipments
+     */
     @SuppressWarnings("Duplicates")
     private void confirmShipmentsInterface() {
         while (true) {
@@ -273,6 +302,10 @@ public final class SupplierInterface extends BasicInterface {
         }
     }
 
+    /**
+     * Prints a list of orders
+     * @param orders the list to print
+     */
     private void printOrders(List<Order> orders) {
         for (int i = 0; i < orders.size(); i++) {
             System.out.printf("[%d] Order %d\n", i + 1, i + 1);
@@ -282,6 +315,11 @@ public final class SupplierInterface extends BasicInterface {
         System.out.print("Which order would you like to view?: ");
     }
 
+    /**
+     * Prints a specified order
+     * @param order the order to print
+     * @param selectionID the order number
+     */
     private void printOrderSelection(Order order, int selectionID) {
         System.out.printf("----------[ Order %d ]----------\n", selectionID);
         System.out.println(order.toString());
@@ -289,6 +327,9 @@ public final class SupplierInterface extends BasicInterface {
 
     }
 
+    /**
+     * The interface that allows suppliers to create inventory orders
+     */
     private void inventoryOrderInterface() {
         while (true) {
             if (Supplier.getInventoryOrderList().isEmpty()) {
@@ -335,6 +376,9 @@ public final class SupplierInterface extends BasicInterface {
         }
     }
 
+    /**
+     * The interface that allows suppliers to create custom inventory orders
+     */
     private void customInventoryOrder() {
         String itemName = "", error;
         int amount = -1;

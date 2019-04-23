@@ -3,13 +3,21 @@ package project;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Contains all methods for managing the inventory of a storefront
+ */
 public class InventoryManager implements java.io.Serializable {
 
     /**
      * The inventory of the storefront
+     *
+     * @see Shipment
      */
     private List<Shipment> inventory;
 
+    /**
+     * Creates a new inventory manager
+     */
     public InventoryManager() {
         inventory = new ArrayList<>();
     }
@@ -21,6 +29,7 @@ public class InventoryManager implements java.io.Serializable {
      * @return the order that is created
      * @throws InvalidCardException  if the customer's card number is not valid
      * @throws CreditLimitException  if the purchase would exceed the customer's credit limit
+     * @see Order
      */
     public Order createOrderRequest(Customer customer) throws InvalidCardException, CreditLimitException {
         return new Order(customer.getUsername(), customer.getCart(), Bank.getPurchaseAuthorizationNumber(customer.getCard(), customer.getCartTotalCost()));
@@ -43,10 +52,10 @@ public class InventoryManager implements java.io.Serializable {
 
     /**
      * Gets a specified shipment from the inventory
-     *
      * @param item the item to search for
      * @return the shipment that is found
      * @throws ItemNotFoundException if the item is not found
+     * @throws NullPointerException if the inventory enumerator returns null
      */
     public Shipment getShipmentFromInventory(Item item) throws ItemNotFoundException, NullPointerException {
         for (Shipment shipment : inventory) {
@@ -103,10 +112,20 @@ public class InventoryManager implements java.io.Serializable {
         }
     }
 
+    /**
+     * Returns the number of indexes in the inventory
+     *
+     * @return the size of the inventory
+     * @see #inventory
+     * @see List#size()
+     */
     public int getInventorySize() {
         return inventory.size();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
